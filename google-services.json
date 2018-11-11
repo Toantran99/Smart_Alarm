@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "232769168579",
+    "firebase_url": "https://smartalarm-df2fe.firebaseio.com",
+    "project_id": "smartalarm-df2fe",
+    "storage_bucket": "smartalarm-df2fe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:232769168579:android:f34aa174570923a9",
+        "android_client_info": {
+          "package_name": "com.smart_alarm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "232769168579-020dtdevvh5sm565v1u4h7qbuje4n82t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjaKZ3wJf8TaeSuue8P_2JJCI8l5WDYu8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
