@@ -52,5 +52,4 @@ render() {
         );
     }
 }
-
 export default GeolocationTracking;

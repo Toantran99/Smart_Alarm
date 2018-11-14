@@ -137,6 +137,9 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-push-notification')
+    compile project(':react-native-maps')
+    compile project(':react-native-google-places')
     implementation project(':react-native-push-notification')
     implementation project(':react-native-maps')
 
