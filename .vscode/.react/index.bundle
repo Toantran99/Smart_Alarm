@@ -61471,8 +61471,9 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         }, function (error) {
           return console.log(error.message);
         }, {
-          enableHighAccuracy: _reactNative.Platform.OS != 'android',
-          timeout: 2000
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 3000
         });
         this.watchId = navigator.geolocation.watchPosition(function (position) {
           var lat = parseFloat(position.coords.latitude);
@@ -61516,9 +61517,39 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         console.log('onRegionChange');
       }
     }, {
+      key: "getCurrentPosition",
+      value: function getCurrentPosition() {
+        var _this3 = this;
+
+        navigator.geolocation.getCurrentPosition(function (position) {
+          var lat = parseFloat(position.coords.latitude);
+          var long = parseFloat(position.coords.longitude);
+          var initalRegion = {
+            latitude: lat,
+            longitude: long,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA
+          };
+
+          _this3.setState({
+            markerCurrentPosition: initalRegion
+          });
+
+          _this3.setState({
+            initialPosition: initalRegion
+          });
+        }, function (error) {
+          return console.log(error.message);
+        }, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 3000
+        });
+      }
+    }, {
       key: "render",
       value: function render() {
-        var _this3 = this;
+        var _this4 = this;
 
         return _react3.default.createElement(
           _reactNative.View,
@@ -61526,7 +61557,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             style: styles.container,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 155
+              lineNumber: 176
             }
           },
           _react3.default.createElement(
@@ -61536,52 +61567,32 @@ __d(function (global, _require, module, exports, _dependencyMap) {
               region: this.state.initialPosition,
               showsMyLocationButton: true,
               onPress: function onPress(e) {
-                return _this3.onMapClick(e.nativeEvent);
+                return _this4.onMapClick(e.nativeEvent);
               },
               onRegionChange: function onRegionChange(e) {
-                _this3.setState({
+                _this4.setState({
                   initialPosition: e
                 });
               },
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 157
+                lineNumber: 178
               }
             },
             _react3.default.createElement(_reactNativeMaps2.default.Marker, {
               coordinate: this.state.markerDestination,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 166
+                lineNumber: 187
               }
             }),
-            _react3.default.createElement(
-              _reactNativeMaps2.default.Marker,
-              {
-                coordinate: this.state.markerCurrentPosition,
-                __source: {
-                  fileName: _jsxFileName,
-                  lineNumber: 170
-                }
-              },
-              _react3.default.createElement(
-                _reactNative.View,
-                {
-                  style: styles.radius,
-                  __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 172
-                  }
-                },
-                _react3.default.createElement(_reactNative.View, {
-                  style: styles.marker,
-                  __source: {
-                    fileName: _jsxFileName,
-                    lineNumber: 173
-                  }
-                })
-              )
-            )
+            _react3.default.createElement(_reactNativeMaps2.default.Marker, {
+              coordinate: this.state.markerCurrentPosition,
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 191
+              }
+            })
           ),
           _react3.default.createElement(
             _reactNative.View,
@@ -61589,7 +61600,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
               style: styles.searchBar,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 178
+                lineNumber: 199
               }
             },
             _react3.default.createElement(
@@ -61597,11 +61608,11 @@ __d(function (global, _require, module, exports, _dependencyMap) {
               {
                 style: styles.searchBtn,
                 onPress: function onPress() {
-                  return _this3.openSearchModal();
+                  return _this4.openSearchModal();
                 },
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 181
+                  lineNumber: 202
                 }
               },
               _react3.default.createElement(
@@ -61613,7 +61624,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                   },
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 184
+                    lineNumber: 205
                   }
                 },
                 "Search some where..."
@@ -61627,13 +61638,11 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 top: 70
               }],
               onPress: function onPress() {
-                _this3.setState({
-                  initialPosition: _this3.state.markerCurrentPosition
-                });
+                return _this4.getCurrentPosition();
               },
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 194
+                lineNumber: 215
               }
             },
             _react3.default.createElement(_reactNative.Image, {
@@ -61641,7 +61650,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
               style: styles.imgBtn,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 198
+                lineNumber: 218
               }
             })
           )
@@ -61711,14 +61720,14 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     },
     searchBar: {
       flexDirection: 'row',
-      backgroundColor: 'transparent',
+      backgroundColor: 'white',
       alignSelf: 'flex-start',
       position: 'absolute',
       right: 0,
       top: 0,
-      paddingTop: 5,
-      paddingLeft: 10,
-      paddingRight: 10
+      marginTop: 5,
+      marginLeft: 10,
+      marginRight: 10
     },
     searchBtn: {
       flexDirection: 'row',
@@ -61732,9 +61741,31 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       },
       shadowRadius: 5,
       shadowOpacity: 1.0
+    },
+    button: {
+      height: 50,
+      width: 50,
+      borderRadius: 50,
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'absolute',
+      bottom: 20,
+      right: 20,
+      shadowColor: "#000000",
+      shadowOpacity: 0.8,
+      shadowRadius: 200,
+      shadowOffset: {
+        height: 1,
+        width: 0
+      }
+    },
+    imgBtn: {
+      height: 50,
+      width: 50,
+      borderRadius: 50
     }
   });
-},491,[118,179,492,12,505,506,507,508,510],"App.js");
+},491,[118,179,492,12,505,506,507,508,509],"App.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -64840,7 +64871,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "name": "locationBtn",
     "type": "png"
   });
-},510,[164],"src\\images\\locationBtn.png");
+},509,[164],"src\\images\\locationBtn.png");
 require(44);
 require(11);
 //# sourceMappingURL=index.map

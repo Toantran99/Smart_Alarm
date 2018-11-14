@@ -61,6 +61,7 @@ export default class App extends Component {
 
   watchId: ?number = null
 
+  
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -82,7 +83,8 @@ export default class App extends Component {
           
       },
       (error) => console.log(error.message),
-      { enableHighAccuracy: Platform.OS != 'android', timeout: 2000 },
+      // { enableHighAccuracy: Platform.OS != 'android', timeout: 2000 },
+      {enableHighAccuracy: true, timeout: 10000, maximumAge: 3000}
     );
 
     this.watchId = navigator.geolocation.watchPosition(
@@ -149,7 +151,26 @@ export default class App extends Component {
     });
   }
 
+  getCurrentPosition(){
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+          var lat = parseFloat(position.coords.latitude)
+          var long = parseFloat(position.coords.longitude)
 
+          var initalRegion = {
+            latitude: lat,
+            longitude: long,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA
+          }
+      // console.log(initalRegion.latitude);
+      this.setState({markerCurrentPosition: initalRegion})
+      this.setState({initialPosition : initalRegion})
+  },
+  (error) => console.log(error.message),
+      // { enableHighAccuracy: Platform.OS != 'android', timeout: 2000 },
+      {enableHighAccuracy: true, timeout: 10000, maximumAge: 3000});
+  }
    render() {
     return (
       <View style ={styles.container}>
@@ -169,9 +190,9 @@ export default class App extends Component {
 
     <MapView.Marker
     coordinate={this.state.markerCurrentPosition}>
-    <View style={styles.radius}>
+    {/* <View style={styles.radius}>
     <View style={styles.marker}></View>
-    </View>
+    </View> */}
     </MapView.Marker>
     </MapView>
 
@@ -183,6 +204,7 @@ export default class App extends Component {
     onPress={() => this.openSearchModal()}>
     <Text style = {{alignSelf: 'center', paddingLeft: 10}}>Search some where...</Text>
     </TouchableOpacity>
+    
     </View>
 
     {/* <TouchableHighlight style={[styles.button, {bottom:20}]}
@@ -190,13 +212,12 @@ export default class App extends Component {
     onPress={() => this.goToSetAlarmScreen()}>
     <Image source={require('./src/images/addBtn.png')} style={styles.imgBtn} />
     </TouchableHighlight> */}
-
     <TouchableOpacity style={[styles.button, {top:70}]}
-    onPress={()=>{
-      this.setState({initialPosition: this.state.markerCurrentPosition})
-    }}>
+    onPress={()=> this.getCurrentPosition()}>
+     {/* this.setState({initialPosition: this.state.markerCurrentPosition}) */}
     <Image source={require('./src/images/locationBtn.png')} style={styles.imgBtn} />
     </TouchableOpacity>
+    
     </View>
     );
   }
@@ -261,94 +282,49 @@ const styles = StyleSheet.create({
     }
   },
   searchBar:{
-  	flexDirection: 'row',
-    backgroundColor: 'transparent',
-    alignSelf: 'flex-start',
-    position: 'absolute',
-	right: 0,
-	top: 0,
-	paddingTop: 5,
-	paddingLeft: 10,
-	paddingRight: 10,
+   flexDirection: 'row',
+   backgroundColor: 'white',
+   alignSelf: 'flex-start',
+   position: 'absolute',
+   right: 0,
+   top: 0,
+   marginTop: 5,
+   marginLeft: 10,
+   marginRight: 10,
+ },
+ searchBtn:{
+   flexDirection: 'row',
+   flex: 1,
+   backgroundColor: 'white',
+   height: 50,
+   shadowColor: '#000000',
+   shadowOffset: {
+    width: 0,
+    height: 3
   },
-  searchBtn:{
-  	flexDirection: 'row',
-  	flex: 1,
-    backgroundColor: 'white',
-    height: 50,
-    shadowColor: '#000000',
-    shadowOffset: {
-      width: 0,
-      height: 3
-    },
-    shadowRadius: 5,
-    shadowOpacity: 1.0,
+  shadowRadius: 5,
+  shadowOpacity: 1.0,
+},
+button: {
+  height: 50,
+  width: 50,
+  borderRadius: 50,
+  alignItems: 'center',
+  justifyContent: 'center',
+  position: 'absolute',
+  bottom: 20,
+  right:20,
+  shadowColor: "#000000",
+  shadowOpacity: 0.8,
+  shadowRadius: 200,
+  shadowOffset: {
+    height: 1,
+    width: 0
   }
+},
+imgBtn: {
+  height: 50,
+  width: 50,
+  borderRadius: 50,
+}
 });
-
-// import MapView from 'react-native-maps';
-//  import React, { Component } from 'react';
-//  import {
-//   Platform,
-//   StyleSheet,
-//   Text,
-//   View,
-//   Dimensions,
-//   TouchableHighlight,
-//   TouchableOpacity,
-//   Button,
-//   Image,
-//   AsyncStorage,
-//   ToastAndroid,
-// } from 'react-native';
-// import RNGooglePlaces from 'react-native-google-places';
-// import geolib from 'geolib';
-// import PushNotification from 'react-native-push-notification';
-// import getAddress from './GetAddress';
-
-// var {width, height} = Dimensions.get('window')
-
-// const SCREEN_WIDTH = width
-// const SCREEN_HEIGHT = height
-// const ASPECT_RADIO = width / height
-// const LATITUDE_DELTA = 0.0922
-// const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RADIO
-
-// export default class Map extends Component {
-//   constructor(props) {
-//     super(props);
-
-//     this.state = {
-//       initialPosition: {
-//         latitude: 14.058324,
-//         longitude: 108.277199,
-//         latitudeDelta: 0.9,
-//         longitudeDelta: 0.9
-//       },
-//   }
-// }
-
-//   watchId: ?number = null;
-
-// render() {
-//   return (
-//     <View style ={styles.container}>
-//     <MapView
-//     style={styles.map}
-//     region={this.state.initialPosition}>
-//     </MapView>
-//     </View>
-//     );
-//   }
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     ...StyleSheet.absoluteFillObject,
-//     justifyContent: 'flex-end',
-//     alignItems: 'center',
-//   },
-//   map: {
-//     ...StyleSheet.absoluteFillObject,
-//   },
-// });
