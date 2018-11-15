@@ -83419,9 +83419,9 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
 	var _reactNavigation = _require(_dependencyMap[3], "react-navigation");
 
-	var _DataController = _require(_dependencyMap[4], "./DataController");
+	var _ListAlarm = _require(_dependencyMap[4], "./ListAlarm");
 
-	var _DataController2 = _interopRequireDefault(_DataController);
+	var _ListAlarm2 = _interopRequireDefault(_ListAlarm);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -83458,34 +83458,435 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
 			var _this = _possibleConstructorReturn(this, (SetAlarm.__proto__ || Object.getPrototypeOf(SetAlarm)).call(this, props));
 
+			_this.addAlarm = function () {
+				var tempAlarm = {
+					key: new Date(),
+					alarmname: _this.state.name,
+					address: _this.state.alarm.address,
+					latitude: _this.state.alarm.latitude,
+					longitude: _this.state.alarm.longitude,
+					minDisToAlarm: _this.state.min,
+					ringtone: _this.state.ringtone,
+					enable: _this.state.alarm.enable
+				};
+				var tempList = _this.state.alarmList;
+				tempList.push(tempAlarm);
+
+				_this.setState({
+					alarmList: tempList
+				});
+
+				_this.setData(tempAlarm.key, tempAlarm);
+
+				_this.props.navigation.state.params.onGoBack();
+
+				_this.props.navigation.goBack();
+			};
+
 			var params = _this.props.navigation.state.params;
+			_this.state = {
+				lastedKey: -1,
+				numList: 0,
+				alarmList: [],
+				alarm: {
+					key: "",
+					alarmName: "",
+					address: params.name,
+					latitude: params.latitude,
+					longitude: params.longitude,
+					minDisToAlarm: 100,
+					ringtone: "default",
+					enable: true
+				},
+				min: 100,
+				name: "Báo thức 1",
+				distance: params.distance,
+				ringtone: "hello_ringtone.mp3"
+			};
 			return _this;
 		}
 
 		_createClass(SetAlarm, [{
+			key: "componentDidMount",
+			value: function componentDidMount() {
+				this.loadAllAlarm();
+			}
+		}, {
+			key: "loadAllAlarm",
+			value: function loadAllAlarm() {
+				var _this2 = this;
+
+				_reactNative.AsyncStorage.getAllKeys().then(function (keys) {
+					_this2.getAllData(keys);
+				});
+			}
+		}, {
+			key: "getAllData",
+			value: function getAllData(keyArray) {
+				var _this3 = this;
+
+				var tempList = new Array();
+
+				_reactNative.AsyncStorage.multiGet(keyArray).then(function (value) {
+					for (var i = 0; i < value.length; i++) {
+						_reactNative.AsyncStorage.getItem(keyArray[i]).then(function (itemValue) {
+							var objValue = JSON.parse(itemValue);
+							tempList.push(objValue);
+
+							_this3.setState({
+								alarmList: tempList
+							});
+						});
+					}
+
+					_this3.setState({
+						numList: value.length
+					});
+				});
+			}
+		}, {
+			key: "setData",
+			value: function setData(keyAlarm, alarmObj) {
+				_reactNative.AsyncStorage.setItem(keyAlarm, JSON.stringify(alarmObj));
+			}
+		}, {
+			key: "updateData",
+			value: function updateData(keyAlarm, alarmObj) {
+				_reactNative.AsyncStorage.mergeItem(keyAlarm, JSON.stringify(alarmObj));
+			}
+		}, {
 			key: "render",
 			value: function render() {
+				var _this4 = this;
+
 				return _react3.default.createElement(
 					_reactNative.View,
 					{
 						style: {
-							padding: 20,
-							paddingTop: 100
+							flex: 1,
+							position: "relative"
 						},
 						__source: {
 							fileName: _jsxFileName,
-							lineNumber: 24
+							lineNumber: 118
 						}
 					},
 					_react3.default.createElement(
-						_reactNative.Text,
+						_reactNative.View,
 						{
+							style: styles.statusBar,
 							__source: {
 								fileName: _jsxFileName,
-								lineNumber: 25
+								lineNumber: 119
 							}
 						},
-						" Test"
+						_react3.default.createElement(
+							_reactNative.TouchableOpacity,
+							{
+								onPress: function onPress() {
+									return _this4.props.navigation.goBack();
+								},
+								__source: {
+									fileName: _jsxFileName,
+									lineNumber: 120
+								}
+							},
+							_react3.default.createElement(_reactNative.Image, {
+								source: _require(_dependencyMap[5], './src/images/back_icon.png'),
+								style: {
+									margin: 15,
+									width: 20,
+									height: 20
+								},
+								__source: {
+									fileName: _jsxFileName,
+									lineNumber: 121
+								}
+							})
+						),
+						_react3.default.createElement(
+							_reactNative.Text,
+							{
+								style: {
+									paddingLeft: 0,
+									alignSelf: 'center',
+									flex: 1,
+									fontSize: 20,
+									color: 'white'
+								},
+								__source: {
+									fileName: _jsxFileName,
+									lineNumber: 123
+								}
+							},
+							"Add Alarm"
+						),
+						_react3.default.createElement(
+							_reactNative.TouchableOpacity,
+							{
+								style: styles.saveBtn,
+								onPress: this.addAlarm,
+								__source: {
+									fileName: _jsxFileName,
+									lineNumber: 124
+								}
+							},
+							_react3.default.createElement(
+								_reactNative.Text,
+								{
+									style: {
+										alignSelf: 'center',
+										paddingLeft: 10,
+										fontSize: 20,
+										color: 'white'
+									},
+									__source: {
+										fileName: _jsxFileName,
+										lineNumber: 125
+									}
+								},
+								"Save"
+							)
+						)
+					),
+					_react3.default.createElement(_reactNative.View, {
+						style: {
+							height: 50
+						},
+						__source: {
+							fileName: _jsxFileName,
+							lineNumber: 129
+						}
+					}),
+					_react3.default.createElement(
+						_reactNative.View,
+						{
+							style: styles.propertiseBox,
+							__source: {
+								fileName: _jsxFileName,
+								lineNumber: 131
+							}
+						},
+						_react3.default.createElement(
+							_reactNative.Text,
+							{
+								style: styles.propertiseTitle,
+								__source: {
+									fileName: _jsxFileName,
+									lineNumber: 132
+								}
+							},
+							"Alarm name"
+						),
+						_react3.default.createElement(_reactNative.TextInput, {
+							style: {
+								marginLeft: 25,
+								padding: 0
+							},
+							underlineColorAndroid: "transparent",
+							onChangeText: function onChangeText(nameAlarm) {
+								return _this4.setState({
+									name: nameAlarm
+								});
+							},
+							value: this.state.name,
+							__source: {
+								fileName: _jsxFileName,
+								lineNumber: 133
+							}
+						})
+					),
+					_react3.default.createElement(
+						_reactNative.View,
+						{
+							style: styles.propertiseBox,
+							__source: {
+								fileName: _jsxFileName,
+								lineNumber: 140
+							}
+						},
+						_react3.default.createElement(
+							_reactNative.Text,
+							{
+								style: styles.propertiseTitle,
+								__source: {
+									fileName: _jsxFileName,
+									lineNumber: 141
+								}
+							},
+							"Destination"
+						),
+						_react3.default.createElement(
+							_reactNative.Text,
+							{
+								style: {
+									paddingLeft: 25
+								},
+								__source: {
+									fileName: _jsxFileName,
+									lineNumber: 142
+								}
+							},
+							this.state.alarm.address
+						)
+					),
+					_react3.default.createElement(
+						_reactNative.View,
+						{
+							style: styles.propertiseBox,
+							__source: {
+								fileName: _jsxFileName,
+								lineNumber: 145
+							}
+						},
+						_react3.default.createElement(
+							_reactNative.Text,
+							{
+								style: styles.propertiseTitle,
+								__source: {
+									fileName: _jsxFileName,
+									lineNumber: 146
+								}
+							},
+							"Distance"
+						),
+						_react3.default.createElement(
+							_reactNative.Text,
+							{
+								style: {
+									paddingLeft: 25
+								},
+								__source: {
+									fileName: _jsxFileName,
+									lineNumber: 147
+								}
+							},
+							this.state.distance + "m"
+						)
+					),
+					_react3.default.createElement(
+						_reactNative.View,
+						{
+							style: styles.propertiseBox,
+							__source: {
+								fileName: _jsxFileName,
+								lineNumber: 150
+							}
+						},
+						_react3.default.createElement(
+							_reactNative.Text,
+							{
+								style: styles.propertiseTitle,
+								__source: {
+									fileName: _jsxFileName,
+									lineNumber: 151
+								}
+							},
+							"Min Distance"
+						),
+						_react3.default.createElement(
+							_reactNative.Text,
+							{
+								style: {
+									paddingLeft: 25
+								},
+								__source: {
+									fileName: _jsxFileName,
+									lineNumber: 152
+								}
+							},
+							this.state.min + "m"
+						),
+						_react3.default.createElement(_reactNative.Slider, {
+							style: {
+								width: 320,
+								marginLeft: 20
+							},
+							step: 1,
+							thumbTintColor: "#ff5722",
+							minimumTrackTintColor: "#ff5722",
+							minimumValue: 100,
+							maximumValue: 1000,
+							value: this.state.min,
+							onValueChange: function onValueChange(val) {
+								return _this4.setState({
+									min: val
+								});
+							},
+							__source: {
+								fileName: _jsxFileName,
+								lineNumber: 153
+							}
+						})
+					),
+					_react3.default.createElement(
+						_reactNative.View,
+						{
+							style: styles.propertiseBox,
+							__source: {
+								fileName: _jsxFileName,
+								lineNumber: 164
+							}
+						},
+						_react3.default.createElement(
+							_reactNative.Text,
+							{
+								style: styles.propertiseTitle,
+								__source: {
+									fileName: _jsxFileName,
+									lineNumber: 165
+								}
+							},
+							"Ringtone"
+						),
+						_react3.default.createElement(
+							_reactNative.Picker,
+							{
+								style: styles.picker,
+								selectedValue: this.state.ringtone,
+								onValueChange: function onValueChange(itemValue, itemIndex) {
+									return _this4.setState({
+										ringtone: itemValue
+									});
+								},
+								__source: {
+									fileName: _jsxFileName,
+									lineNumber: 166
+								}
+							},
+							_react3.default.createElement(_reactNative.Picker.Item, {
+								label: "Oop oop",
+								value: "oop.mp3",
+								__source: {
+									fileName: _jsxFileName,
+									lineNumber: 169
+								}
+							}),
+							_react3.default.createElement(_reactNative.Picker.Item, {
+								label: "Hello",
+								value: "hello_ringtone.mp3",
+								__source: {
+									fileName: _jsxFileName,
+									lineNumber: 170
+								}
+							}),
+							_react3.default.createElement(_reactNative.Picker.Item, {
+								label: "In My Heart",
+								value: "in_my_heart.mp3",
+								__source: {
+									fileName: _jsxFileName,
+									lineNumber: 171
+								}
+							}),
+							_react3.default.createElement(_reactNative.Picker.Item, {
+								label: "Sweet Ringtone",
+								value: "sweet.mp3",
+								__source: {
+									fileName: _jsxFileName,
+									lineNumber: 172
+								}
+							})
+						)
 					)
 				);
 			}
@@ -83494,16 +83895,80 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 		return SetAlarm;
 	}(_react2.Component), _class.navigationOptions = {
 		title: 'Alarm Settings',
+		tabBarVisible: false,
 		header: _react3.default.createElement(_reactNative.View, {
 			__source: {
 				fileName: _jsxFileName,
-				lineNumber: 17
+				lineNumber: 52
 			}
 		})
 	}, _temp));
 
+	var styles = _reactNative.StyleSheet.create({
+		button: {
+			height: 50,
+			width: 50,
+			borderRadius: 50,
+			alignItems: 'center',
+			justifyContent: 'center',
+			position: 'absolute',
+			bottom: 20,
+			right: 20,
+			shadowColor: "#000000",
+			shadowOpacity: 0.8,
+			shadowRadius: 200,
+			shadowOffset: {
+				height: 1,
+				width: 0
+			}
+		},
+		imgBtn: {
+			height: 50,
+			width: 50,
+			borderRadius: 50
+		},
+		picker: {
+			height: 20,
+			marginLeft: 20,
+			opacity: 0.6
+		},
+		statusBar: {
+			flexDirection: 'row',
+			backgroundColor: "#ff5722",
+			alignSelf: 'flex-start',
+			position: 'absolute',
+			right: 0,
+			top: 0
+		},
+		saveBtn: {
+			flexDirection: 'row',
+			width: 70,
+			backgroundColor: 'transparent',
+			height: 50,
+			shadowColor: '#000000',
+			shadowOffset: {
+				width: 0,
+				height: 3
+			},
+			shadowRadius: 5,
+			shadowOpacity: 1.0
+		},
+		propertiseBox: {
+			paddingBottom: 10
+		},
+		propertiseText: {},
+		propertiseTitle: {
+			marginBottom: 10,
+			color: "black",
+			fontWeight: 'bold',
+			padding: 10,
+			backgroundColor: "#D7D7D7",
+			paddingLeft: 20
+		}
+	});
+
 	exports.default = SetAlarm;
-},631,[118,179,12,492,632],"SetAlarm.js");
+},631,[118,179,12,492,629,636],"SetAlarm.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
     "__packager_asset": true,
@@ -83516,170 +83981,6 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "type": "png"
   });
 },635,[164],"src\\images\\addBtn.png");
-__d(function (global, _require, module, exports, _dependencyMap) {
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-
-  var _react2 = _require(_dependencyMap[0], "react");
-
-  var _react3 = _interopRequireDefault(_react2);
-
-  var _index = _require(_dependencyMap[1], "./node_modules/react-transform-hmr/lib/index.js");
-
-  var _index2 = _interopRequireDefault(_index);
-
-  var _jsxFileName = "D:\\GitHub\\Smart_Alarm\\DataController.js";
-
-  var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-  var _reactNative = _require(_dependencyMap[2], "react-native");
-
-  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-  function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-  function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-  var _components = {
-    Data: {
-      displayName: "Data"
-    }
-  };
-
-  var _node_modulesReactTransformHmrLibIndexJs2 = (0, _index2.default)({
-    filename: "D:/GitHub/Smart_Alarm/DataController.js",
-    components: _components,
-    locals: [module],
-    imports: [_react3.default]
-  });
-
-  function _wrapComponent(id) {
-    return function (Component) {
-      return _node_modulesReactTransformHmrLibIndexJs2(Component, id);
-    };
-  }
-
-  var Data = _wrapComponent("Data")(function (_Component) {
-    _inherits(Data, _Component);
-
-    function Data() {
-      _classCallCheck(this, Data);
-
-      var _this = _possibleConstructorReturn(this, (Data.__proto__ || Object.getPrototypeOf(Data)).call(this));
-
-      _this.callBackTest = function () {
-        console.log("duocr ahihi");
-
-        for (var i = 0; i < _this.state.alarmList.length; i++) {
-          console.log(_this.state.alarmList[i]);
-        }
-      };
-
-      _this.state = {
-        alarmList: []
-      };
-      return _this;
-    }
-
-    _createClass(Data, [{
-      key: "componentDidMount",
-      value: function componentDidMount() {
-        this.loadAllAlarm();
-      }
-    }, {
-      key: "loadAllAlarm",
-      value: function loadAllAlarm() {
-        var _this2 = this;
-
-        _reactNative.AsyncStorage.getAllKeys().then(function (keys) {
-          _this2.getAllData(keys);
-        });
-      }
-    }, {
-      key: "getAllData",
-      value: function getAllData(keyArray) {
-        var _this3 = this;
-
-        var tempList = new Array();
-
-        _reactNative.AsyncStorage.multiGet(keyArray).then(function (value) {
-          for (var i = 0; i < value.length; i++) {
-            _reactNative.AsyncStorage.getItem(keyArray[i]).then(function (itemValue) {
-              var objValue = JSON.parse(itemValue);
-              tempList.push(objValue);
-
-              _this3.setState({
-                alarmList: tempList
-              });
-            });
-          }
-        });
-      }
-    }, {
-      key: "setData",
-      value: function setData(keyAlarm, alarmObj) {
-        _reactNative.AsyncStorage.setItem(keyAlarm, JSON.stringify(alarmObj));
-      }
-    }, {
-      key: "updateData",
-      value: function updateData(keyAlarm, alarmObj) {
-        _reactNative.AsyncStorage.mergeItem(keyAlarm, JSON.stringify(alarmObj));
-      }
-    }, {
-      key: "render",
-      value: function render() {
-        return _react3.default.createElement(
-          _reactNative.View,
-          {
-            style: {
-              flex: 1
-            },
-            __source: {
-              fileName: _jsxFileName,
-              lineNumber: 73
-            }
-          },
-          _react3.default.createElement(_reactNative.TouchableOpacity, {
-            style: {
-              backgroundColor: "blue",
-              flex: 0.5
-            },
-            onPress: this.callBackTest,
-            __source: {
-              fileName: _jsxFileName,
-              lineNumber: 75
-            }
-          }),
-          _react3.default.createElement(_reactNative.TouchableOpacity, {
-            style: {
-              backgroundColor: "pink",
-              flex: 0.5
-            },
-            onPress: this.callBackTest,
-            __source: {
-              fileName: _jsxFileName,
-              lineNumber: 79
-            }
-          })
-        );
-      }
-    }], [{
-      key: "TestFunction",
-      value: function TestFunction() {
-        for (var i = 0; i < this.state.alarmList.length; i++) {
-          console.log(this.state.alarmList[i]);
-        }
-      }
-    }]);
-
-    return Data;
-  }(_react2.Component));
-
-  exports.default = Data;
-},632,[118,179,12],"DataController.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	Object.defineProperty(exports, "__esModule", {
 		value: true
@@ -83716,6 +84017,18 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 		}
 	});
 },637,[118,12,492,610,629,631],"MapStackNavigator.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+  module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
+    "__packager_asset": true,
+    "httpServerLocation": "/assets/src/images",
+    "width": 315,
+    "height": 315,
+    "scales": [1],
+    "hash": "717f51348298e092c2c4bed2dcfd4853",
+    "name": "back_icon",
+    "type": "png"
+  });
+},636,[164],"src\\images\\back_icon.png");
 require(44);
 require(11);
 //# sourceMappingURL=index.map
