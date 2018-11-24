@@ -27,8 +27,9 @@ const ASPECT_RADIO = width / height
 const LATITUDE_DELTA = 0.09
 // const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RADIO
 const LONGITUDE_DELTA = 0.9
+}
 
-export default class App extends Component {
+export default class Map extends Component {
   constructor(props) {
     super(props);
 
@@ -60,8 +61,8 @@ export default class App extends Component {
     };
   }
 
-  watchId: ?number = null
 
+  watchId: ?number = null;
   
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
@@ -192,6 +193,7 @@ export default class App extends Component {
     }
   }
    render() {
+    const {navigate} = this.props.navigation;
     return (
       <View style ={styles.container}>
 
@@ -205,15 +207,15 @@ export default class App extends Component {
           }}>
 
           <MapView.Marker
-    coordinate={this.state.markerDestination}>
-    </MapView.Marker>
+              coordinate={this.state.markerDestination}>
+          </MapView.Marker>
 
-    <MapView.Marker
-    coordinate={this.state.markerCurrentPosition}>
-    {/* <View style={styles.radius}>
-    <View style={styles.marker}></View>
-    </View> */}
-    </MapView.Marker>
+          <MapView.Marker
+          coordinate={this.state.markerCurrentPosition}>
+          {/* <View style={styles.radius}>
+          <View style={styles.marker}></View>
+          </View> */}
+          </MapView.Marker>
     </MapView>
 
     <View style={styles.searchBar}>

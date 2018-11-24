@@ -133,6 +133,7 @@ class SetAlarm extends Component {
 					<TextInput
 						style = {{marginLeft: 25, padding: 0}}
 						underlineColorAndroid='transparent'
+						autoFocus = {true}
 						onChangeText={(nameAlarm) => this.setState({name:nameAlarm})}
 						value={this.state.name}/>
 				</View>
