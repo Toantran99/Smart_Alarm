@@ -18,6 +18,7 @@ import geolib from 'geolib';
 import GPlacesDemo from './SearchPlace';
 import {StackNavigator} from 'react-navigation';
 import getAddress from './GetAddress';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 var {width, height} = Dimensions.get('window')
 
@@ -27,7 +28,8 @@ const ASPECT_RADIO = width / height
 const LATITUDE_DELTA = 0.09
 // const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RADIO
 const LONGITUDE_DELTA = 0.9
-}
+
+
 
 export default class Map extends Component {
   constructor(props) {
@@ -60,6 +62,8 @@ export default class Map extends Component {
       isGotPossition: false,
     };
   }
+
+  
 
 
   watchId: ?number = null;
@@ -193,7 +197,7 @@ export default class Map extends Component {
     }
   }
    render() {
-    const {navigate} = this.props.navigation;
+    // const { navigate } = this.props.navigation;
     return (
       <View style ={styles.container}>
 

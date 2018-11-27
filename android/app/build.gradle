@@ -94,13 +94,13 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "com.smart_alarm"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         ndk {
@@ -137,10 +137,8 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-vector-icons')
-    compile project(':react-native-push-notification')
-    compile project(':react-native-maps')
-    compile project(':react-native-google-places')
+    implementation project(':react-native-vector-icons')
+    implementation project(':react-native-google-places')
     implementation project(':react-native-push-notification')
     implementation project(':react-native-maps')
 
@@ -158,7 +156,7 @@ dependencies {
     implementation ('com.google.android.gms:play-services-places:16.0.0') {force = true;}
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.android.support:appcompat-v7:27.1.1"
+    implementation "com.android.support:appcompat-v7:28.0.0"
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
 }

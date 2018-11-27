@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 const menuIcon = (<Icon name="md-menu" size={30} color={'#fff'} style={{paddingRight: 10, paddingLeft: 15}} />);
 
+
 export default StackNavigator({
 	Map: {
 		screen: Map,
