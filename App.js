@@ -4,6 +4,7 @@ import {StackNavigator, createDrawerNavigator,DrawerItems} from 'react-navigatio
 import Map from './Map';
 import ListAlarmStack from './ListAlarmStack';
 import SetAlarm from './SetAlarm';
+// import MainView from './MainView';
 import MapStackNavigator from './MapStackNavigator';
 import {Container,Content,Header,Body} from 'native-base'
 import Icon_FontAwesome from 'react-native-vector-icons/FontAwesome5';

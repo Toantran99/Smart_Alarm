@@ -10,14 +10,68 @@ import {
 	TouchableOpacity,
 	AsyncStorage,
 	Slider,
-	Picker
+	Picker,ScrollView, Alert
 } from 'react-native';
+import Sound from 'react-native-sound';
 import {StackNavigator} from 'react-navigation';
 import ListAlarm from './ListAlarm';
 
+function setTestState(testInfo, component, status) {
+	component.setState({tests: {...component.state.tests}});
+  }
+  const audioTests = 
+	{
+	  title: 'mp3 in bundle',
+	  url: 'ringtone.mp3',
+	  basePath: Sound.MAIN_BUNDLE,
+	}
+  /**
+   * Generic play function for majority of tests
+   */
+function playSound(testInfo, component) {
+	setTestState(testInfo, component, 'pending');
+  
+	const callback = (error, sound) => {
+	  if (error) {
+		Alert.alert('error', error.message);
+		setTestState(testInfo, component, 'fail');
+		return;
+	  }
+	  setTestState(testInfo, component, 'playing');
+	  // Run optional pre-play callback
+	  testInfo.onPrepared && testInfo.onPrepared(sound, component);
+	  sound.play(() => {
+		// Success counts as getting to the end
+		setTestState(testInfo, component, 'win');
+		// Release when it's done so we're not using up resources
+		sound.release();
+	  });
+	};
+  
+	// If the audio is a 'require' then the second parameter must be the callback.
+	// if (testInfo.isRequire) {
+	//   const sound = new Sound(testInfo.url, error => callback(error, sound));
+	// } else {
+	//   const sound = new Sound(testInfo.url, testInfo.basePath, error => callback(error, sound));
+	// }
+  }
 class SetAlarm extends Component {
 	constructor(props) {
 		super(props);
+		Sound.setCategory('Playback', true); // true = mixWithOthers
+			
+		// Special case for stopping
+		this.stopSoundLooped = () => {
+		if (!this.state.loopingSound) {
+			return;
+		}
+
+		this.state.loopingSound.stop().release();
+		this.setState({loopingSound: null, tests: {...this.state.tests, ['mp3 in bundle (looped)']: 'win'}});
+		};
+
+
+
 		const {params} = this.props.navigation.state;
 		this.state = {
 			lastedKey: -1,
@@ -36,7 +90,9 @@ class SetAlarm extends Component {
 			min: 100,
 			name: "Báo thức 1",
 			distance: params.distance,
-			ringtone: "hello_ringtone.mp3",
+			ringtone: "ringtone.mp3",
+			loopingSound: undefined,
+			tests: {},
 		}
 	}
 
@@ -111,8 +167,43 @@ class SetAlarm extends Component {
 			AsyncStorage.mergeItem(keyAlarm, JSON.stringify(alarmObj));
 		}
 
-		render() {
+		getMP3(nameFile){
+			title:''
+			url: nameFile;
+			basePath: Sound.MAIN_BUNDLE;
+			console.log('ABC');
+		}
+		ABC(nameFile){
+			this.setState({ringtone: nameFile})// => set value for Picker when value change
 
+			this.ringtone = new Sound(
+				nameFile,
+				Sound.MAIN_BUNDLE,
+			   error => {
+					if (error) {
+					 // Means the file was never loaded.
+					 console.warn(error);
+					 return;
+				   }
+				   this.ringtone.setVolume(1);
+				   this.ringtone.play(success => {
+					//  if (!success) {
+					//    this.ringtone.reset();
+					//  }
+					if (success) {
+						console.log('successfully finished playing');
+					  } else {
+						console.log('playback failed due to audio decoding errors');
+						// reset the player to its uninitialized state (android only)
+						// this is the only option to recover after an error occured and use the player again
+						whoosh.reset();
+					  }
+				   });
+				 }
+			   );
+		}
+		render() {
+			
 		return(
 
 			<View style={{flex: 1, position: "relative"}}>
@@ -166,8 +257,11 @@ class SetAlarm extends Component {
 					<Text style = {styles.propertiesTitle}>Ringtone</Text>
 					<Picker style = {styles.picker}
 					  selectedValue={this.state.ringtone}
-					  onValueChange={(itemValue, itemIndex) => this.setState({ringtone: itemValue})}>
-					  <Picker.Item label="Oop oop" value="oop.mp3" />
+					//   onValueChange={(itemValue, itemIndex) => this.setState({ringtone: itemValue})}
+					// onValueChange={(itemValue, itemIndex) => this.ABC(this.state.ringtone)}
+					onValueChange={(itemValue, itemIndex) => this.ABC(itemValue)}
+					  >
+					  <Picker.Item label="Oop oop" value="ringtone.mp3" />
 					  <Picker.Item label="Hello" value="hello_ringtone.mp3" />
 					  <Picker.Item label="In My Heart" value="in_my_heart.mp3" />
 					  <Picker.Item label="Sweet Ringtone" value="sweet.mp3" />

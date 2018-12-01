@@ -18,7 +18,8 @@ import geolib from 'geolib';
 import GPlacesDemo from './SearchPlace';
 import {StackNavigator} from 'react-navigation';
 import getAddress from './GetAddress';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon_Ion from 'react-native-vector-icons/Ionicons';
+
 
 var {width, height} = Dimensions.get('window')
 
@@ -28,13 +29,14 @@ const ASPECT_RADIO = width / height
 const LATITUDE_DELTA = 0.09
 // const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RADIO
 const LONGITUDE_DELTA = 0.9
+const searchIcon = (<Icon_Ion name="ios-search" size={30} color={'#fff'} style={{paddingRight: 10, paddingLeft: 15}} />);
 
 
 
 export default class Map extends Component {
   constructor(props) {
     super(props);
-
+    this.openSearchModal = this.openSearchModal.bind(this);
     this.state = {
       initialPosition: {
         // latitude: 0,
@@ -64,11 +66,26 @@ export default class Map extends Component {
   }
 
   
+  
 
 
   watchId: ?number = null;
   
+  static navigationOptions = ({navigation}) => {
+    const {params = {}} = navigation.state;
+    return {
+      headerRight:<View >
+				<TouchableHighlight
+					onPress={() => params.SearchModal()}>
+					{ searchIcon }
+				</TouchableHighlight>
+			</View>
+    };
+};
   componentDidMount() {
+    this.props.navigation.setParams({
+      SearchModal: this.openSearchModal
+    });
     navigator.geolocation.getCurrentPosition(
       (position) => {
           var lat = parseFloat(position.coords.latitude)
@@ -120,11 +137,8 @@ export default class Map extends Component {
     navigator.geolocation.clearWatch(this.watchId);
   }
 
-  onRegionChange(region) {
-    console.log('onRegionChange')
-  }
-
-  openSearchModal = () => {
+  // Search for a place on the map
+  openSearchModal(){
     RNGooglePlaces.openAutocompleteModal()
     .then((place) => {
       console.log(place);
@@ -143,6 +157,11 @@ export default class Map extends Component {
     .catch(error => console.log(error.message));
   }
 
+  onRegionChange(region) {
+    console.log('onRegionChange')
+  }
+
+  // Mark the location when clicked on the map
   onMapClick = (data) => {
     var latitude = data.coordinate.latitude;
     var longitude = data.coordinate.longitude;
@@ -156,7 +175,7 @@ export default class Map extends Component {
         name: data}});
     });
   }
-
+  // Determine your current location
   getCurrentPosition(){
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -222,21 +241,10 @@ export default class Map extends Component {
           </MapView.Marker>
     </MapView>
 
-    <View style={styles.searchBar}>
-
-
-    <TouchableOpacity
-    style={styles.searchBtn}
-    onPress={() => this.openSearchModal()}>
-    <Text style = {{alignSelf: 'center', paddingLeft: 10}}>Search some where...</Text>
-    </TouchableOpacity>
-    
-    </View>
-
     <TouchableHighlight style={[styles.button, {bottom:20}]}
     underlayColor='#ff7043'
     onPress={() => this.goToSetAlarmScreen()}>
-    <Image source={require('./src/images/addBtn.png')} style={styles.imgBtn} />
+    <Image source={require('./src/images/alarm-clock.png')} style={styles.imgBtn} />
     </TouchableHighlight>
     
     <TouchableOpacity style={[styles.button, {top:70}]}

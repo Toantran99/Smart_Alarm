@@ -8,20 +8,20 @@ import SetAlarm from './SetAlarm';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const menuIcon = (<Icon name="md-menu" size={30} color={'#fff'} style={{paddingRight: 10, paddingLeft: 15}} />);
-
-
+const searchIcon = (<Icon name="ios-search" size={30} color={'#fff'} style={{paddingRight: 10, paddingLeft: 15}} />);
+const map = new Map();
 export default StackNavigator({
 	Map: {
 		screen: Map,
 		navigationOptions: ({navigation}) => ({
 			headerStyle:{
-				backgroundColor: 'rgb(255,45,85)',
+				backgroundColor: '#1E90FF',
 				borderBottomColor: '#ffffff',
 				borderBottomWidth: 3,
 			},
-			title:'Home',
+			title:'Bản đồ',
 			headerTintColor: 'white',
-			headerLeft: <View style={styles.headerLeft}>
+			headerLeft:( <View style={styles.headerLeft}>
 				<TouchableHighlight style = {styles.container}
 					onPress = {()=>{
 						// navigation.navigate('DrawerOpen');
@@ -29,7 +29,17 @@ export default StackNavigator({
 					}}>
 					{ menuIcon }
 				</TouchableHighlight>
-			</View>
+				</View>
+			),
+			// headerRight:<View style={styles.headerLeft}>
+			// 	<TouchableHighlight style = {styles.container}
+			// 		onPress = {()=>{
+			// 			this.props.openSearchModal();
+			// 			// map.openSearchModal();
+			// 		}}>
+			// 		{ searchIcon }
+			// 	</TouchableHighlight>
+			// </View>
 			})
 		},
 	SetAlarm: {screen: SetAlarm},
