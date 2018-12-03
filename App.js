@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, StyleSheet,Image,TouchableHighlight} from 'react-native';
+import {View, StyleSheet,Image,TouchableHighlight,Text} from 'react-native';
 import {StackNavigator, createDrawerNavigator,DrawerItems} from 'react-navigation';
 import Map from './Map';
 import ListAlarmStack from './ListAlarmStack';
@@ -12,12 +12,13 @@ import Icon_Ion from 'react-native-vector-icons/Ionicons';
 
 const CustomDrawerContentComponent = (props)=>(
   <Container>
-    <Header style = {{height:200,backgroundColor:'white'}}>
+    <Header style = {{height:200,backgroundColor:'#7986cb'}}>
       <Body>
         <Image
-          style = {StyleSheet.drawerImage}
+          style = {styles.drawerImage}
           source = {require('./src/images/images.jpg')}
           />
+          <Text  style = {styles.text}>ABC</Text>
       </Body>
     </Header>
     <Content>
@@ -34,7 +35,10 @@ const TravelAlarmDrawer = createDrawerNavigator({
     navigationOptions :{ 
         drawerIcon: () => (
           <Icon_FontAwesome name='map-marked-alt' 
-          color='#F50057'/>
+          color='#F50057'
+          size={19}
+          />
+          
         )
     }
   },
@@ -43,7 +47,9 @@ const TravelAlarmDrawer = createDrawerNavigator({
       navigationOptions :{ 
       drawerIcon: () => (
         <Icon_Ion name='md-alarm' 
-        color='#F50057'/>
+        color='#F50057'
+        size={19}
+        />
       )
     }
   },
@@ -52,7 +58,9 @@ const TravelAlarmDrawer = createDrawerNavigator({
       navigationOptions :{ 
       drawerIcon: () => (
         <Icon_FontAwesome name='bell' 
-        color='#F50057'/>
+        color='#F50057'
+        size={19}
+        />
       )
       }
     },
@@ -61,16 +69,20 @@ const TravelAlarmDrawer = createDrawerNavigator({
       navigationOptions :{ 
       drawerIcon: () => (
         <Icon_FontAwesome name='user-friends' 
-        color='#F50057'/>
+        color='#F50057'
+        size={19}
+        />
       )
       }
     },
   'Đăng xuất':{
       screen: ListAlarmStack,
       navigationOptions :{ 
-      drawerIcon: () => (
+      drawerIcon: ({ tintColor }) => (
         <Icon_Ion name='ios-log-out' 
-        color='#F50057'/>
+        color='#F50057'
+        size={19}
+        />
       )
       }
     },
@@ -80,24 +92,9 @@ const TravelAlarmDrawer = createDrawerNavigator({
   animationEnabled: true,
   contentComponent: CustomDrawerContentComponent,
   contentOptions:{
-    activeTintColor:'orange'
-  },
-  tabBarOptions: {
     activeTintColor: '#ff5722',
-    inactiveTintColor: '#000000',
-    style: {
-      padding: 2,
-      backgroundColor: 'white',
-    },
-    showIcon: true,
-    upperCaseLabel: false,
-    indicatorStyle: {
-      backgroundColor: '#ff5722',
-    },
-    tabStyle: {
-      paddingVertical: 0,
-      height: 50,
-    }
+    inactiveTintColor: '#757575',
+    activeBackgroundColor: '#bdbdbd'
   },
 });
 
@@ -108,10 +105,16 @@ styles = StyleSheet.create({
     alignItems:'center'
   },
   drawerImage:{
-    height:150,
-    width:150,
+    height:100,
+    width:100,
     borderRadius:75
   },
+  text:{
+    paddingLeft:30,
+    paddingTop:20,
+    textAlign:'center',
+    fontSize:20
+  }
 })
 
 

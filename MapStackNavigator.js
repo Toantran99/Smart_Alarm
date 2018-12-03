@@ -15,7 +15,7 @@ export default StackNavigator({
 		screen: Map,
 		navigationOptions: ({navigation}) => ({
 			headerStyle:{
-				backgroundColor: '#1E90FF',
+				backgroundColor: '#7986cb',
 				borderBottomColor: '#ffffff',
 				borderBottomWidth: 3,
 			},
