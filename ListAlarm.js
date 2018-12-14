@@ -32,9 +32,9 @@ export default class ListAlarm extends Component {
 			src: require('./src/images/bell.png'),
 			SwitchValue: true,
 			markerCurrentPosition: {
-        latitude: 0,
-        longitude: 0
-      },
+				latitude: 0,
+				longitude: 0
+			},
 		}
 	}
 
@@ -43,20 +43,20 @@ export default class ListAlarm extends Component {
 		this.loadAllAlarm();
 
 		navigator.geolocation.getCurrentPosition(
-     (position) => {
-      var lat = parseFloat(position.coords.latitude)
-      var long = parseFloat(position.coords.longitude)
+		(position) => {
+		var lat = parseFloat(position.coords.latitude)
+		var long = parseFloat(position.coords.longitude)
 
-      var initalRegion = {
-        latitude: lat,
-        longitude: long
-      }
+		var initalRegion = {
+			latitude: lat,
+			longitude: long
+		}
 
-      this.setState({markerCurrentPosition: initalRegion});
-   },
-   (error) => console.log(error.message),
-   { enableHighAccuracy: Platform.OS != 'android', timeout: 2000 },
-   );
+		this.setState({markerCurrentPosition: initalRegion});
+	},
+	(error) => console.log(error.message),
+	{ enableHighAccuracy: Platform.OS != 'android', timeout: 2000 },
+	);
 
 		this.watchId = navigator.geolocation.watchPosition(
 		 (position) => {
@@ -136,9 +136,9 @@ export default class ListAlarm extends Component {
 		return(
 			<View style={{flex: 1}}>
 			<View style={styles.statusBar}>
-				<Text style = {{paddingLeft: 15, flex: 1, fontSize: 20, color: 'white', alignSelf: "center",  }}>List Alarm</Text>
+				<Text style = {{paddingLeft: 15, flex: 1, fontSize: 20, color: 'white', alignSelf: "center",  }}>Báo thức</Text>
 				<TouchableOpacity
-				style={styles.saveBtn} onPress = {this.refresh}>
+				style={styles.saveBtn} onPress = {()=>{this.loadAllAlarm()}}>
 					<Image source={require('./src/images/reload.png')} style={{margin: 15, width: 20, height: 20}} />
 				</TouchableOpacity>
 			</View>
@@ -164,8 +164,8 @@ export default class ListAlarm extends Component {
 					this.onSwitchRow(rowData, value);
 				}}
 				value={rowData.enable}
-				thumbTintColor = {"#e23600"}
-				onTintColor = {"#ffaf96"} />
+				thumbTintColor = {"#1976d2"}
+				onTintColor = {"#90caf9"} />
 				</View>
 				</TouchableOpacity>
 				)
@@ -188,10 +188,10 @@ export default class ListAlarm extends Component {
 		}
 
 		loadAllAlarm()
-		{
-			AsyncStorage.getAllKeys()
-			.then(keys => {
-				this.getAllData(keys);
+		{	
+				AsyncStorage.getAllKeys()
+				.then(keys => {
+					this.getAllData(keys);
 			});
 		}
 
@@ -244,7 +244,7 @@ export default class ListAlarm extends Component {
 		},
 		statusBar:{
 			flexDirection: 'row',
-			backgroundColor: "#ff5722",
+			backgroundColor: "#7986cb",
 			alignSelf: 'flex-start',
 			right: 0,
 			top: 0,

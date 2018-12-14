@@ -14,6 +14,9 @@ import {
 } from 'react-native';
 import {StackNavigator} from 'react-navigation';
 import geolib from 'geolib';
+import Icon_Ion from 'react-native-vector-icons/Ionicons';
+const closeIcon = (<Icon_Ion name="md-close" size={30} color={'#fff'} style={{paddingRight: 10, paddingLeft: 15,paddingTop:5,paddingBottom:5}}/>);
+const saveIcon = (<Icon_Ion name="md-checkmark" size={30} color={'#fff'} style={{paddingRight: 10, paddingLeft: 15,paddingTop:5 ,paddingBottom:5}}/>);
 
 class EditAlarm extends Component {
 	constructor(props) {
@@ -67,69 +70,72 @@ class EditAlarm extends Component {
 
 	render() {
 		return(
+
 			<View style={{flex: 1, position: "relative"}}>
 				<View style={styles.statusBar}>
-				<TouchableOpacity onPress = {() => this.props.navigation.goBack()}>
-					<Image source={require('./src/images/back_icon.png')} style={{margin: 15, width: 20, height: 20}} />
-				</TouchableOpacity>
-					<Text style = {{paddingLeft: 20,alignSelf: 'center', flex: 1, fontSize: 20, color: 'white'}}>Edit Alarm</Text>
-			        <TouchableOpacity
-			          style={styles.saveBtn} onPress={this.saveAlarm}>
-			          <Text style = {{alignSelf: 'center', paddingLeft: 10, fontSize: 20, color: 'white'}}>Save</Text>
-			        </TouchableOpacity>
-			    </View>
+					<TouchableOpacity onPress = {() => this.props.navigation.goBack()}>
+						{closeIcon}
+					</TouchableOpacity>
+					<Text style = {{paddingLeft: 0,textAlign:'center',alignSelf: 'center', flex: 1, fontSize: 22, color: 'black'}}>Chỉnh sửa báo thức</Text>
 
-			    <View style = {{height: 50}}></View>
-				<View style={styles.propertiseBox}>
-			<Text style = {styles.propertiseTitle}>Alarm name</Text>
+					<TouchableOpacity onPress={this.addAlarm} >
+						{saveIcon} 
+					</TouchableOpacity>
+				</View>
+
+				<View style = {{height: 50}}></View>
+				
+				<View style={styles.titleBox}>
+					<Text style = {styles.propertiesTitle}>Tên báo thức</Text>
 					<TextInput
 						style = {{marginLeft: 25, padding: 0}}
 						underlineColorAndroid='transparent'
-						onChangeText={(tenBaoThuc) => this.setState({name:tenBaoThuc})}
-        				value={this.state.name}
-					 	/>
+						autoFocus = {true}
+						onChangeText={(nameAlarm) => this.setState({name:nameAlarm})}
+						value={this.state.name}/>
 				</View>
 
-				<View style={styles.propertiseBox}>
-			<Text style = {styles.propertiseTitle}>Destination</Text>
+				<View style={styles.titleBox}>
+					<Text style = {styles.propertiesTitle}>Địa chỉ</Text>
 					<Text style = {{paddingLeft: 25}}>{this.state.alarm.address}</Text>
 				</View>
 
-				<View style={styles.propertiseBox}>
-			<Text style = {styles.propertiseTitle}>Distance</Text>
+				<View style={styles.titleBox}>
+					<Text style = {styles.propertiesTitle}>Khoảng cách hiện tại</Text>
 					<Text style = {{paddingLeft: 25}}>{this.state.distance + "m"}</Text>
 				</View>
 
-				<View style={styles.propertiseBox}>
-					<Text style = {styles.propertiseTitle}>Min Distance</Text>
+				<View style={styles.titleBox}>
+					<Text style = {styles.propertiesTitle}>Khoảng cách báo thức</Text>
 					<Text style = {{paddingLeft: 25}}>{this.state.min + "m"}</Text>
 					<Slider
-				         style={{ width: 320, marginLeft: 20}}
-				         step={1}
-				         thumbTintColor = {"#ff5722"}
-				         minimumTrackTintColor = {"#ff5722"}
-				         minimumValue={100}
-				         maximumValue={1000}
-				         value={this.state.min}
-				         onValueChange={val => this.setState({ min: val })}
-			        />
+						style={{ width: 320, marginLeft: 20}}
+						step={1}
+						thumbTintColor = {"#ffa000"}
+						minimumTrackTintColor = {"#ffa000"}
+						minimumValue={100}
+						maximumValue={1000}
+						value={this.state.min}
+						onValueChange={val => this.setState({ min: val })}/>
 				</View>
 
-		        <View style={styles.propertiseBox}>
-			<Text style = {styles.propertiseTitle}>Ringtone</Text>
-				<Picker style = {styles.picker}
-				  selectedValue={this.state.ringtone}
-				  onValueChange={(itemValue, itemIndex) => this.setState({ringtone: itemValue})}>
-				  <Picker.Item label="Oop oop" value="oop.mp3" />
-				  <Picker.Item label="Hello" value="hello_ringtone.mp3" />
-				  <Picker.Item label="In My Heart" value="in_my_heart.mp3" />
-				  <Picker.Item label="Sweet Ringtone" value="sweet.mp3" />
-				</Picker>
+				<View style={styles.titleBox}>
+					<Text style = {styles.propertiesTitle}>Nhạc chuông</Text>
+					<Picker style = {styles.picker}
+					  selectedValue={this.state.ringtone}
+					//   onValueChange={(itemValue, itemIndex) => this.setState({ringtone: itemValue})}
+					// onValueChange={(itemValue, itemIndex) => this.ABC(this.state.ringtone)}
+					onValueChange={(itemValue, itemIndex) => this.turnOnRingStone(itemValue)}
+					  >
+					  <Picker.Item label="Way Back Home" value="way_back_home.mp3" />
+					  <Picker.Item label="Hello OMFG" value="hello_omfg_ringtone.mp3" />
+					  <Picker.Item label="Chicken Disco" value="chicken_disco.mp3" />
+					  <Picker.Item label="Despacito Marimba" value="despacito_marimba.mp3" />
+					</Picker>
+				</View>
 			</View>
-
-			</View>
-		)
-	}
+			)
+		}
 
   async updateData(keyAlarm, alarmObj)
   {
@@ -138,68 +144,30 @@ class EditAlarm extends Component {
 }
 
 const styles = StyleSheet.create({
-  	button: {
-	    height: 50,
-	    width: 50,
-	    borderRadius: 50,
-	    alignItems: 'center',
-	    justifyContent: 'center',
-	    position: 'absolute',
-	    bottom: 20,
-	    right:20,
-	    shadowColor: "#000000",
-	    shadowOpacity: 0.8,
-	    shadowRadius: 200,
-	    shadowOffset: {
-	      height: 1,
-	      width: 0
-    }
-  	},
-  	imgBtn: {
-	  	height: 50,
-	    width: 50,
-	    borderRadius: 50,
-  	},
-  	picker: {
+	picker: {
 		height: 20,
 		marginLeft: 20,
 		opacity: 0.6,
 	},
-  	statusBar:{
-	     flexDirection: 'row',
-	     backgroundColor: "#ff5722",
-	     alignSelf: 'flex-start',
-	     position: 'absolute',
-	     right: 0,
-	     top: 0,
-   },
-   saveBtn:{
-     flexDirection: 'row',
-     width: 70,
-     backgroundColor: 'transparent',
-     height: 50,
-     shadowColor: '#000000',
-     shadowOffset: {
-      width: 0,
-      height: 3
-    },
-    shadowRadius: 5,
-    shadowOpacity: 1.0,
-  },
-  propertiseBox: {
-  	paddingBottom: 10
-  },
-  propertiseText: {
-
-  },
-  propertiseTitle: {
-  	marginBottom: 10,
-  	color: "black",
-  	fontWeight: 'bold',
-  	padding: 10,
-  	backgroundColor: "#D7D7D7",
-  	paddingLeft: 20
-  }
+	statusBar:{
+		flexDirection: 'row',
+		backgroundColor: "#7986cb",
+		alignSelf: 'flex-start',
+		position: 'absolute',
+		right: 0,
+		top: 0,
+	},
+	titleBox: {
+		paddingBottom: 10
+	},
+	propertiesTitle: {
+		marginBottom: 10,
+		color: "black",
+		fontWeight: 'bold',
+		padding: 10,
+		backgroundColor: "#D7D7D7",
+		paddingLeft: 20
+	}
 });
 
 export default EditAlarm;

@@ -4,6 +4,7 @@ import {StackNavigator, createDrawerNavigator,DrawerItems} from 'react-navigatio
 import Map from './Map';
 import ListAlarmStack from './ListAlarmStack';
 import SetAlarm from './SetAlarm';
+import Alarm from './Alarm';
 // import MainView from './MainView';
 import MapStackNavigator from './MapStackNavigator';
 import {Container,Content,Header,Body} from 'native-base'
@@ -65,7 +66,7 @@ const TravelAlarmDrawer = createDrawerNavigator({
       }
     },
   'Bạn bè':{
-      screen: ListAlarmStack,
+      screen: Alarm,
       navigationOptions :{ 
       drawerIcon: () => (
         <Icon_FontAwesome name='user-friends' 

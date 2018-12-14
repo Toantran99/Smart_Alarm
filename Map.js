@@ -26,11 +26,10 @@ var {width, height} = Dimensions.get('window')
 const SCREEN_WIDTH = width
 const SCREEN_HEIGHT = height
 const ASPECT_RADIO = width / height
-const LATITUDE_DELTA = 0.09
+const LATITUDE_DELTA = 0.01
 // const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RADIO
-const LONGITUDE_DELTA = 0.9
+const LONGITUDE_DELTA = 0.01
 const searchIcon = (<Icon_Ion name="ios-search" size={30} color={'#fff'} style={{paddingRight: 10, paddingLeft: 15}} />);
-
 
 
 export default class Map extends Component {
@@ -45,8 +44,8 @@ export default class Map extends Component {
         // longitudeDelta: 0
         latitude: 14.058324,
         longitude: 108.277199,
-        latitudeDelta: 0.9,
-        longitudeDelta: 0.9
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA
       },
       markerCurrentPosition: {
         latitude: 0,
@@ -62,6 +61,7 @@ export default class Map extends Component {
         longitude: 0
       },
       isGotPossition: false,
+      alarmList: [],
     };
   }
 
@@ -141,7 +141,7 @@ export default class Map extends Component {
   openSearchModal(){
     RNGooglePlaces.openAutocompleteModal()
     .then((place) => {
-      console.log(place);
+      // console.log(place);
       this.setState({markerDestination: {
         latitude: place.latitude,
         longitude: place.longitude,
@@ -158,7 +158,7 @@ export default class Map extends Component {
   }
 
   onRegionChange(region) {
-    console.log('onRegionChange')
+    // console.log('onRegionChange')
   }
 
   // Mark the location when clicked on the map
@@ -211,9 +211,58 @@ export default class Map extends Component {
         longitude: longitude,
         name: name,
         distance: geolib.getDistance(this.state.markerCurrentPosition, this.state.markerDestination),
-        onGoBack: () => this.refresh()
+        onGoBack: () => this.refresh(),
       });
     }
+  }
+  refresh = () => {
+    this.loadAllAlarm();
+  }
+  onAlarm=(alarm)=> {
+    {
+      //TODO: schedule background notification
+      PushNotification.localNotificationSchedule({
+        date: new Date(Date.now()),
+        title: alarm.alarmname, // (optional, for iOS this is only used in apple watch, the title will be the app name on other iOS devices)
+        message: "You are going to reach " + alarm.address, // (required)
+        soundName: alarm.ringtone, // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
+      });
+    }
+  }
+  
+  disableAlarm = (alarm) => {
+    alarm.enable = false;
+    this.updateData(alarm.key, alarm);
+  }
+  
+  async updateData(keyAlarm, alarmObj)
+  {
+    await AsyncStorage.mergeItem(keyAlarm, JSON.stringify(alarmObj));
+  }
+  
+  async loadAllAlarm(){
+    await AsyncStorage.getAllKeys()
+    .then(keys => {
+      this.getAllData(keys);
+    });
+  }
+  
+  getAllData(keyArray){
+    var tempList = new Array();
+    AsyncStorage.multiGet(keyArray).then(
+      value => {
+        for(var i = 0; i < value.length; i++)
+        {
+          AsyncStorage.getItem(keyArray[i])
+          .then(itemValue => {
+            const objValue = JSON.parse(itemValue);
+            tempList.push(objValue);
+            this.setState({
+              alarmList: tempList
+            });
+          });
+        }
+      });
   }
    render() {
     // const { navigate } = this.props.navigation;
@@ -225,19 +274,17 @@ export default class Map extends Component {
           region={this.state.initialPosition}
           showsMyLocationButton = {true}
           onPress={e => this.onMapClick(e.nativeEvent)}
-          onRegionChange={(e) => {
-            this.setState({initialPosition: e});
-          }}>
+          onRegionChange = {this.onRegionChange.bind(this)}>
+          
 
           <MapView.Marker
               coordinate={this.state.markerDestination}>
           </MapView.Marker>
 
           <MapView.Marker
-          coordinate={this.state.markerCurrentPosition}>
-          {/* <View style={styles.radius}>
-          <View style={styles.marker}></View>
-          </View> */}
+              title ={'Vị trí hiện tại'}
+              coordinate={this.state.markerCurrentPosition}>
+              <Image source={require('./src/images/circular-shape.png')} style={styles.imgCircle}  />
           </MapView.Marker>
     </MapView>
 
@@ -361,5 +408,9 @@ imgBtn: {
   height: 50,
   width: 50,
   borderRadius: 50,
+},
+imgCircle: {
+  height: 15,
+  width: 15,
 }
 });

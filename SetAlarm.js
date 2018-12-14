@@ -10,7 +10,7 @@ import {
 	TouchableOpacity,
 	AsyncStorage,
 	Slider,
-	Picker,ScrollView, Alert
+	Picker,ScrollView, Alert,ToastAndroid
 } from 'react-native';
 import Sound from 'react-native-sound';
 import {StackNavigator} from 'react-navigation';
@@ -76,8 +76,14 @@ class SetAlarm extends Component {
 			tempList.push(tempAlarm);
 			this.setState({alarmList: tempList});
 			this.setData(tempAlarm.key, tempAlarm);
+			this.loadAllAlarm();
 			this.props.navigation.state.params.onGoBack();
 			this.props.navigation.goBack();
+			ToastAndroid.showWithGravity(
+				'Thêm thành công',
+				ToastAndroid.SHORT,
+				ToastAndroid.BOTTOM,
+			  );
 		}
 
 		loadAllAlarm()
@@ -99,6 +105,7 @@ class SetAlarm extends Component {
 					.then(itemValue => {
 						const objValue = JSON.parse(itemValue);
 						tempList.push(objValue);
+						console.log(itemValue);
 						this.setState({
 							alarmList: tempList
 						})
@@ -159,7 +166,7 @@ class SetAlarm extends Component {
 					<TouchableOpacity onPress = {() => this.props.navigation.goBack()}>
 						{closeIcon}
 					</TouchableOpacity>
-					<Text style = {{paddingLeft: 0,textAlign:'center',alignSelf: 'center', flex: 1, fontSize: 22, color: 'black'}}>Add Alarm</Text>
+					<Text style = {{paddingLeft: 0,textAlign:'center',alignSelf: 'center', flex: 1, fontSize: 22, color: 'black'}}>Thiết lập báo thức</Text>
 
 					<TouchableOpacity onPress={this.addAlarm} >
 						{saveIcon} 
@@ -169,7 +176,7 @@ class SetAlarm extends Component {
 				<View style = {{height: 50}}></View>
 				
 				<View style={styles.titleBox}>
-					<Text style = {styles.propertiesTitle}>Alarm name</Text>
+					<Text style = {styles.propertiesTitle}>Tên báo thức</Text>
 					<TextInput
 						style = {{marginLeft: 25, padding: 0}}
 						underlineColorAndroid='transparent'
@@ -179,17 +186,17 @@ class SetAlarm extends Component {
 				</View>
 
 				<View style={styles.titleBox}>
-					<Text style = {styles.propertiesTitle}>Destination</Text>
+					<Text style = {styles.propertiesTitle}>Địa chỉ</Text>
 					<Text style = {{paddingLeft: 25}}>{this.state.alarm.address}</Text>
 				</View>
 
 				<View style={styles.titleBox}>
-					<Text style = {styles.propertiesTitle}>Distance</Text>
+					<Text style = {styles.propertiesTitle}>Khoảng cách hiện tại</Text>
 					<Text style = {{paddingLeft: 25}}>{this.state.distance + "m"}</Text>
 				</View>
 
 				<View style={styles.titleBox}>
-					<Text style = {styles.propertiesTitle}>Min Distance</Text>
+					<Text style = {styles.propertiesTitle}>Khoảng cách báo thức</Text>
 					<Text style = {{paddingLeft: 25}}>{this.state.min + "m"}</Text>
 					<Slider
 						style={{ width: 320, marginLeft: 20}}
@@ -203,7 +210,7 @@ class SetAlarm extends Component {
 				</View>
 
 				<View style={styles.titleBox}>
-					<Text style = {styles.propertiesTitle}>Ringtone</Text>
+					<Text style = {styles.propertiesTitle}>Nhạc chuông</Text>
 					<Picker style = {styles.picker}
 					  selectedValue={this.state.ringtone}
 					//   onValueChange={(itemValue, itemIndex) => this.setState({ringtone: itemValue})}
