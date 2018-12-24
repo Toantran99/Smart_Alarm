@@ -31,8 +31,6 @@ const LONGITUDE_DELTA = 0.01
 const searchIcon = (<Icon_Ion name="ios-search" size={30} color={'#fff'} style={{paddingRight: 10, paddingLeft: 15}} />);
 import BackgroundTimer from 'react-native-background-timer';
 
-import backgroudService from './BackgroundService'
-//const backgroudServiceABC = new backgroudService();
 
 export default class Map extends Component {
   constructor(props) {

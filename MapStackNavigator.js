@@ -4,7 +4,6 @@ import {StackNavigator, DrawerNavigator} from 'react-navigation';
 import Map from './Map';
 import App from './App';
 import Alarm from './Alarm';
-import AlarmStackNavigator from './AlarmStackNavigator';
 import SetAlarm from './SetAlarm';
 import Icon from 'react-native-vector-icons/Ionicons';
 
