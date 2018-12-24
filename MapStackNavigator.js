@@ -3,13 +3,13 @@ import {View, StyleSheet,TouchableHighlight,Text,Image} from 'react-native';
 import {StackNavigator, DrawerNavigator} from 'react-navigation';
 import Map from './Map';
 import App from './App';
-import ListAlarm from './ListAlarm';
+import Alarm from './Alarm';
+import AlarmStackNavigator from './AlarmStackNavigator';
 import SetAlarm from './SetAlarm';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const menuIcon = (<Icon name="md-menu" size={30} color={'#fff'} style={{paddingRight: 10, paddingLeft: 15}} />);
 const searchIcon = (<Icon name="ios-search" size={30} color={'#fff'} style={{paddingRight: 10, paddingLeft: 15}} />);
-const map = new Map();
 export default StackNavigator({
 	Map: {
 		screen: Map,
@@ -24,25 +24,18 @@ export default StackNavigator({
 			headerLeft:( <View style={styles.headerLeft}>
 				<TouchableHighlight style = {styles.container}
 					onPress = {()=>{
-						// navigation.navigate('DrawerOpen');
 						navigation.openDrawer();
 					}}>
 					{ menuIcon }
 				</TouchableHighlight>
 				</View>
 			),
-			// headerRight:<View style={styles.headerLeft}>
-			// 	<TouchableHighlight style = {styles.container}
-			// 		onPress = {()=>{
-			// 			this.props.openSearchModal();
-			// 			// map.openSearchModal();
-			// 		}}>
-			// 		{ searchIcon }
-			// 	</TouchableHighlight>
-			// </View>
 			})
 		},
-	SetAlarm: {screen: SetAlarm},
+	 SetAlarm: {screen: SetAlarm},
+	 Alarm:{screen:Alarm,navigationOptions: { header: null }},
+
+
 });
 
 const styles = StyleSheet.create({

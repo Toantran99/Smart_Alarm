@@ -11,6 +11,7 @@ import {
 	Switch,
 	ToastAndroid,
 	Platform,
+	TouchableWithoutFeedback,
 } from 'react-native';
 import Map from './Map'
 
@@ -20,8 +21,7 @@ export default class ListAlarm extends Component {
 		super(props);
 		const ds = new ListView.DataSource({
 			rowHasChanged: (r1, r2) => r1 !== r2
-		}
-		);
+		});
 
 		this.state = {
 			numList: 0,
@@ -94,11 +94,11 @@ export default class ListAlarm extends Component {
 	confirmDeleteAlarm=(key) => {
 		console.log(key);
 		Alert.alert(
-			'Delete Alarm',
-			'Do you want to delete this alarm?',
+			'Xóa báo thức',
+			'Bạn có muốn xóa báo thức này không?',
 			[
-			{text: 'Cancel', onPress: () => console.log('cancel')},
-			{text: 'OK', onPress: () => this.deleteAlarm(key)},
+			{text: 'Hủy', onPress: () => console.log('cancel')},
+			{text: 'Xóa', onPress: () => this.deleteAlarm(key)},
 			],
 			{cancelable: false}
 			);
@@ -116,11 +116,11 @@ export default class ListAlarm extends Component {
 	onSwitchRow(rowData, value){
 		if(value){
 			this.setState({src: require('./src/images/bell.png')});
-			ToastAndroid.show('Turn on alarm ' + rowData.alarmname + ' successfully!', ToastAndroid.SHORT);
+			ToastAndroid.show('Bật báo thức ' + rowData.alarmname + 'thành công!', ToastAndroid.SHORT);
 		}
 		else{
 			this.setState({src: require('./src/images/belloff.png')});
-			ToastAndroid.show('Turn off alarm ' + rowData.alarmname + 'successfully!', ToastAndroid.SHORT);
+			ToastAndroid.show('Tắt báo thức ' + rowData.alarmname + 'thành công!', ToastAndroid.SHORT);
 		}
 		rowData.enable = value;
 		this.updateData(rowData.key, rowData);
@@ -147,6 +147,9 @@ export default class ListAlarm extends Component {
 			enableEmptySections={true}
 			renderRow={(rowData) => {
 				return (
+				// <TouchableWithoutFeedback onLongPress={()=>this.menu.open()}>
+
+				// </TouchableWithoutFeedback>
 				<TouchableOpacity
 				onPress={() => navigate('EditAlarm', {alarm: rowData, currentPosition: this.state.markerCurrentPosition, onGoBack: () => this.refresh()})}
 				onLongPress={() => this.confirmDeleteAlarm(rowData.key)}>

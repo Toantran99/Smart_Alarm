@@ -1,18 +1,23 @@
-import {Text, View, StyleSheet, AppState, TouchableOpacity,Vibration,Image,AsyncStorage} from 'react-native';
+import {Dimensions,Easing,Animated,Text, View, StyleSheet, AppState, TouchableOpacity,Vibration,Image,AsyncStorage} from 'react-native';
 import React, {Component} from 'react';
 import NotiController from './NotiController';
 import PushNotification from 'react-native-push-notification';
+import {StackNavigator} from 'react-navigation';
 const PATTERN = [1000, 3000, 5000]
+import map from './Map'
+
 export default class AlarmScene extends Component {
   constructor(props){
     super(props);
-
-
-    //Vibration.vibrate(10000),
+    const {params} = this.props.navigation.state;
     this.state = {
-      seconds : 5
+      seconds : 5,
+      address:params.addressAlarm,
+      ringtones: params.ringtoneAlarm,
+      xValue: new Animated.Value(0),
     };
   }
+
 
   onClickCallBack=() =>
   {
@@ -26,23 +31,19 @@ export default class AlarmScene extends Component {
         });
     }
   }
-
   render(){
     Vibration.vibrate(PATTERN)
     return(
-      // <View
-      //   style = {styles.container}>
-      //   <Text> ALARM </Text>
-      //   <TouchableOpacity
-      //     style = {styles.button}
-      //     onPress={this.onClickCallBack}>
-      //     <Image source={require('./src/images/Alarm_Clock.gif')} style={{width:300, height: 200 }} />
-      //   </TouchableOpacity>
-      //   <NotiController />
-      // </View>
       <View style={styles.container}>
-      <Image source={require('./src/images/Alarm_Clock.gif')} style={{width:300, height: 250 }} />
+      <Image source={require('./src/images/backgroundAlarm.jpg')} style={{flex:1,height:50 }} />
+      <View style={{flex:3, alignItems: 'center',justifyContent: 'center',}}>
+      <Text>{this.state.address}</Text>
+      <Image source={require('./src/images/Alarm_Clock.gif')} style={{width:250, height: 200 }} />
+      <Image source={require('./src/images/push-button.gif')} style={{marginTop:-15,width:50, height: 50 }} />
       </View>
+       </View>
+
+    
     );
   }
 }

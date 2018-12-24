@@ -20,7 +20,6 @@ import {StackNavigator} from 'react-navigation';
 import getAddress from './GetAddress';
 import Icon_Ion from 'react-native-vector-icons/Ionicons';
 
-
 var {width, height} = Dimensions.get('window')
 
 const SCREEN_WIDTH = width
@@ -30,7 +29,10 @@ const LATITUDE_DELTA = 0.01
 // const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RADIO
 const LONGITUDE_DELTA = 0.01
 const searchIcon = (<Icon_Ion name="ios-search" size={30} color={'#fff'} style={{paddingRight: 10, paddingLeft: 15}} />);
+import BackgroundTimer from 'react-native-background-timer';
 
+import backgroudService from './BackgroundService'
+//const backgroudServiceABC = new backgroudService();
 
 export default class Map extends Component {
   constructor(props) {
@@ -60,9 +62,18 @@ export default class Map extends Component {
         latitude: 0,
         longitude: 0
       },
+      locationAlarm : {
+        latitude: 0,
+        longitude: 0,
+      },
+      distanceCurrent:0,
       isGotPossition: false,
       alarmList: [],
+      IS_ALARMING:false,
     };
+    setInterval(()=>{
+      this.getCurrentPosition();
+    },10000)
   }
 
   
@@ -83,6 +94,8 @@ export default class Map extends Component {
     };
 };
   componentDidMount() {
+  
+    
     this.props.navigation.setParams({
       SearchModal: this.openSearchModal
     });
@@ -133,9 +146,43 @@ export default class Map extends Component {
     );
   }
 
+   shouldComponentUpdate(nextProps, nextState){
+    //backgroudServiceABC.onLocationChanged(this.state.markerCurrentPosition,this.state.alarmList);
+    this.onLocationChanged(this.state.markerCurrentPosition,this.state.alarmList);
+    console.log("shouldComponentUpdate")
+    return true;
+   }
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchId);
   }
+
+  //set alarm conditions and run the alarm screen
+  onLocationChanged(markerCurrentPosition,alarmLists){
+         if(!this.state.IS_ALARMING) {
+            AsyncStorage.getAllKeys()
+            .then(keys => {
+                var tempList = new Array();
+                AsyncStorage.multiGet(keys).then(
+                    value => {
+                        if(value.length > 0) {
+                            for(var i = 0; i < value.length; i++)
+                            {
+                                AsyncStorage.getItem(keys[i])
+                                .then(itemValue => {
+                                    const objValue = JSON.parse(itemValue);
+                                    this.state.locationAlarm.latitude = objValue.latitude;
+                                    this.state.locationAlarm.longitude = objValue.longitude;
+                                    this.state.distanceCurrent = geolib.getDistance(markerCurrentPosition, this.state.locationAlarm);
+                                    if (this.state.distanceCurrent <= objValue.minDisToAlarm) {
+                                        console.log("Here");
+                                        this.goToAlarm(objValue.address,objValue.ringtone);
+                                    }
+                                    })
+                                }}
+                    });
+            });
+        }
+    }
 
   // Search for a place on the map
   openSearchModal(){
@@ -159,6 +206,11 @@ export default class Map extends Component {
 
   onRegionChange(region) {
     // console.log('onRegionChange')
+    ToastAndroid.showWithGravity(
+      this.state.markerCurrentPosition.longitude.toString()+"AND"+this.state.markerCurrentPosition.latitude.toString(),
+    ToastAndroid.LONG,
+      ToastAndroid.BOTTOM,
+      );
   }
 
   // Mark the location when clicked on the map
@@ -188,15 +240,28 @@ export default class Map extends Component {
             latitudeDelta: LATITUDE_DELTA,
             longitudeDelta: LONGITUDE_DELTA
           }
-      // console.log(initalRegion.latitude);
       this.setState({markerCurrentPosition: initalRegion})
       this.setState({initialPosition : initalRegion})
   },
   (error) => console.log(error.message),
       // { enableHighAccuracy: Platform.OS != 'android', timeout: 2000 },
       {enableHighAccuracy: true, timeout: 10000, maximumAge: 3000});
+      console.log(this.state.markerCurrentPosition);
   }
 
+  // Go to Alarm screen
+  goToAlarm = (address,ringtone) => {
+    const {navigate} = this.props.navigation;                 
+      navigate('Alarm',
+      {
+        addressAlarm: address,
+        ringtoneAlarm: ringtone,
+        // onGoBack: () => this.refresh(),                                  
+      });
+    
+  }
+
+  // Go to Alarm setting screen
   goToSetAlarmScreen = () => {
     const {navigate} = this.props.navigation;
     var latitude =  this.state.markerDestination.latitude;
