@@ -79,16 +79,16 @@ export default class ListAlarm extends Component {
 		navigator.geolocation.clearWatch(this.watchId);
 	}
 
-	static navigationOptions = {
-		tabBarLabel: "List Alarm",
-		tabBarIcon: ({ tintColor }) => (
-			<Image
-			source={require('./src/images/ic_list_alarm.png')}
-			style={{width: 24, height: 24, tintColor: tintColor}}
-			/>
-		),
-		header: <View></View>
-	}
+	// static navigationOptions = {
+	// 	tabBarLabel: "List Alarm",
+	// 	tabBarIcon: ({ tintColor }) => (
+	// 		<Image
+	// 		source={require('./src/images/ic_list_alarm.png')}
+	// 		style={{width: 24, height: 24, tintColor: tintColor}}
+	// 		/>
+	// 	),
+	// 	header: <View></View>
+	// }
 
 //
 	confirmDeleteAlarm=(key) => {
@@ -128,20 +128,19 @@ export default class ListAlarm extends Component {
 
 	refresh = () => {
 		this.loadAllAlarm();
-		console.log(this.props.navigation.state);
 	}
 
 	render() {
 		const {navigate} = this.props.navigation;
 		return(
 			<View style={{flex: 1}}>
-			<View style={styles.statusBar}>
+			{/* <View style={styles.statusBar}>
 				<Text style = {{paddingLeft: 15, flex: 1, fontSize: 20, color: 'white', alignSelf: "center",  }}>Báo thức</Text>
 				<TouchableOpacity
 				style={styles.saveBtn} onPress = {()=>{this.loadAllAlarm()}}>
 					<Image source={require('./src/images/reload.png')} style={{margin: 15, width: 20, height: 20}} />
 				</TouchableOpacity>
-			</View>
+			</View> */}
 			<ListView style={styles.container}
 			dataSource={this.state.dataSource}
 			enableEmptySections={true}
@@ -200,6 +199,7 @@ export default class ListAlarm extends Component {
 
 		getAllData(keyArray)
 		{
+			console.log("getAllData")
 			var tempList = new Array();
 			AsyncStorage.multiGet(keyArray).then(
 				value => {

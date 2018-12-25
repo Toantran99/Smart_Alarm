@@ -69,9 +69,7 @@ export default class Map extends Component {
       alarmList: [],
       IS_ALARMING:false,
     };
-    setInterval(()=>{
-      this.getCurrentPosition();
-    },10000)
+    
   }
 
   
@@ -93,7 +91,9 @@ export default class Map extends Component {
 };
   componentDidMount() {
   
-    
+    setInterval(()=>{
+      this.getCurrentPosition();
+    },10000)
     this.props.navigation.setParams({
       SearchModal: this.openSearchModal
     });
@@ -118,7 +118,7 @@ export default class Map extends Component {
       },
       (error) => console.log(error.message),
       // { enableHighAccuracy: Platform.OS != 'android', timeout: 2000 },
-      {enableHighAccuracy: true, timeout: 10000, maximumAge: 3000}
+      {enableHighAccuracy: false, timeout: 15000, maximumAge: 3600000}
     );
 
     this.watchId = navigator.geolocation.watchPosition(
@@ -140,23 +140,26 @@ export default class Map extends Component {
       }
       },
       (error) => console.log(error.message),
-      {enableHighAccuracy: Platform.OS != 'android', timeout: 2000, distanceFilter: 1},
+      // {enableHighAccuracy: Platform.OS != 'android', timeout: 2000, distanceFilter: 1},
+      {enableHighAccuracy: false, timeout: 15000, maximumAge: 3600000}
     );
   }
 
    shouldComponentUpdate(nextProps, nextState){
-    //backgroudServiceABC.onLocationChanged(this.state.markerCurrentPosition,this.state.alarmList);
     this.onLocationChanged(this.state.markerCurrentPosition,this.state.alarmList);
     console.log("shouldComponentUpdate")
     return true;
    }
   componentWillUnmount() {
+    this.setState({IS_ALARMING:false})
+    clearInterval();
     navigator.geolocation.clearWatch(this.watchId);
   }
 
   //set alarm conditions and run the alarm screen
   onLocationChanged(markerCurrentPosition,alarmLists){
          if(!this.state.IS_ALARMING) {
+          console.log("onLocationChanged")
             AsyncStorage.getAllKeys()
             .then(keys => {
                 var tempList = new Array();
@@ -173,9 +176,15 @@ export default class Map extends Component {
                                     this.state.distanceCurrent = geolib.getDistance(markerCurrentPosition, this.state.locationAlarm);
                                     if (this.state.distanceCurrent <= objValue.minDisToAlarm) {
                                         console.log("Here");
+                                        if(objValue.enable === true){
                                         this.goToAlarm(objValue.address,objValue.ringtone);
+                                        this.setState({IS_ALARMING:true});
+                                        this.disableAlarm(objValue);
+                                        console.log(objValue.enable);
+                                        }
                                     }
                                     })
+
                                 }}
                     });
             });
@@ -243,7 +252,7 @@ export default class Map extends Component {
   },
   (error) => console.log(error.message),
       // { enableHighAccuracy: Platform.OS != 'android', timeout: 2000 },
-      {enableHighAccuracy: true, timeout: 10000, maximumAge: 3000});
+      {enableHighAccuracy: false, timeout: 15000, maximumAge: 3600000});
       console.log(this.state.markerCurrentPosition);
   }
 

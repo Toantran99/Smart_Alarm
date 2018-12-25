@@ -31,7 +31,17 @@ export default StackNavigator({
 			),
 			})
 		},
-	 SetAlarm: {screen: SetAlarm},
+	 SetAlarm: {screen: SetAlarm,
+		navigationOptions: ({navigation}) => ({
+			headerStyle:{
+				backgroundColor: '#7986cb',
+				borderBottomColor: '#ffffff',
+				borderBottomWidth: 3,
+			},
+			title:'Thiết lập báo thức',
+			headerTintColor: 'white',
+			})
+	},
 	 Alarm:{screen:Alarm,navigationOptions: { header: null }},
 
 

@@ -23,7 +23,7 @@ const saveIcon = (<Icon_Ion name="md-checkmark" size={30} color={'#fff'} style={
 class SetAlarm extends Component {
 	constructor(props) {
 		super(props);
-		
+		this.addAlarm = this.addAlarm.bind(this);
 		const {params} = this.props.navigation.state;
 		this.state = {
 			lastedKey: -1,
@@ -42,7 +42,7 @@ class SetAlarm extends Component {
 			min: 100,
 			name: "Báo thức 1",
 			distance: params.distance,
-			ringtone: "WayBackHome.mp3",
+			ringtone: "way_back_home.mp3",
 			check_save: false
 		}
 	}
@@ -52,12 +52,22 @@ class SetAlarm extends Component {
 			this.loadAllAlarm();
 		}
 
-		static navigationOptions = {
-			title: 'Alarm Settings',
-			tabBarVisible: false,
-			header:
-			<View></View>
-		};
+		static navigationOptions = ({navigation}) => {
+			const {params = {}} = navigation.state;
+			return {
+			  headerRight:<View >
+			  		<TouchableOpacity onPress={() => params.addAlarm()}>
+						{saveIcon} 
+					</TouchableOpacity>
+					</View>
+			};
+		}
+		// static navigationOptions = {
+		// 	title: 'Alarm Settings',
+		// 	tabBarVisible: false,
+		// 	header:
+		// 	<View></View>
+		// };
 
 
 		addAlarm = () => {
@@ -77,6 +87,7 @@ class SetAlarm extends Component {
 			this.setState({alarmList: tempList});
 			this.setData(tempAlarm.key, tempAlarm);
 			this.loadAllAlarm();
+			this.stopSound();
 			this.props.navigation.state.params.onGoBack();
 			this.props.navigation.goBack();
 			ToastAndroid.showWithGravity(
@@ -129,8 +140,7 @@ class SetAlarm extends Component {
 		
 		turnOnRingStone(nameFile){
 			this.setState({ringtone: nameFile})// => set value for Picker when value change
-			
-
+		
 			this.ringtone = new Sound(
 				nameFile,
 				undefined,
@@ -156,13 +166,15 @@ class SetAlarm extends Component {
 				 }
 			   );
 		}
-
+		stopSound(){
+			this.ringtone.stop();
+		}
 
 		render() {
 		return(
 
 			<View style={{flex: 1, position: "relative"}}>
-				<View style={styles.statusBar}>
+				{/* <View style={styles.statusBar}>
 					<TouchableOpacity onPress = {() => this.props.navigation.goBack()}>
 						{closeIcon}
 					</TouchableOpacity>
@@ -171,14 +183,14 @@ class SetAlarm extends Component {
 					<TouchableOpacity onPress={this.addAlarm} >
 						{saveIcon} 
 					</TouchableOpacity>
-				</View>
+				</View> */}
 
-				<View style = {{height: 50}}></View>
+				{/* <View style = {{height: 50}}></View> */}
 				
 				<View style={styles.titleBox}>
 					<Text style = {styles.propertiesTitle}>Tên báo thức</Text>
 					<TextInput
-						style = {{marginLeft: 25, padding: 0}}
+						style = {styles.propertiesText}
 						underlineColorAndroid='transparent'
 						autoFocus = {true}
 						onChangeText={(nameAlarm) => this.setState({name:nameAlarm})}
@@ -187,17 +199,17 @@ class SetAlarm extends Component {
 
 				<View style={styles.titleBox}>
 					<Text style = {styles.propertiesTitle}>Địa chỉ</Text>
-					<Text style = {{paddingLeft: 25}}>{this.state.alarm.address}</Text>
+					<Text style = {styles.propertiesText}>{this.state.alarm.address}</Text>
 				</View>
 
 				<View style={styles.titleBox}>
 					<Text style = {styles.propertiesTitle}>Khoảng cách hiện tại</Text>
-					<Text style = {{paddingLeft: 25}}>{this.state.distance + "m"}</Text>
+					<Text style = {styles.propertiesText}>{this.state.distance + "m"}</Text>
 				</View>
 
 				<View style={styles.titleBox}>
 					<Text style = {styles.propertiesTitle}>Khoảng cách báo thức</Text>
-					<Text style = {{paddingLeft: 25}}>{this.state.min + "m"}</Text>
+					<Text style = {styles.propertiesText}>{this.state.min + "m"}</Text>
 					<Slider
 						style={{ width: 320, marginLeft: 20}}
 						step={1}
@@ -253,9 +265,16 @@ class SetAlarm extends Component {
 			color: "black",
 			fontWeight: 'bold',
 			padding: 10,
+			fontSize:18,
 			backgroundColor: "#D7D7D7",
 			paddingLeft: 20
-		}
+		},
+		propertiesText: {
+			paddingLeft: 25,
+			color: "black",
+			fontSize:16,
+		},
+
 	});
 
 	export default SetAlarm;

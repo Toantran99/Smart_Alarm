@@ -12,7 +12,7 @@ import Icon_Ion from 'react-native-vector-icons/Ionicons';
 
 const CustomDrawerContentComponent = (props)=>(
   <Container>
-    <Header style = {{height:200,backgroundColor:'#7986cb'}}>
+    <Header style = {{height:190,backgroundColor:'#7986cb'}}>
       <Body>
         <Image
           style = {styles.drawerImage}
@@ -92,7 +92,7 @@ const TravelAlarmDrawer = createDrawerNavigator({
   animationEnabled: true,
   contentComponent: CustomDrawerContentComponent,
   contentOptions:{
-    activeTintColor: '#ff5722',
+    activeTintColor: '#ff5719',
     inactiveTintColor: '#757575',
     activeBackgroundColor: '#bdbdbd'
   },
@@ -111,9 +111,9 @@ styles = StyleSheet.create({
   },
   text:{
     paddingLeft:30,
-    paddingTop:20,
+    paddingTop:19,
     textAlign:'center',
-    fontSize:20
+    fontSize:19
   }
 })
 
