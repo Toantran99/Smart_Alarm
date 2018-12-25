@@ -2,24 +2,20 @@ package com.smart_alarm;
 
 import android.app.Application;
 
+import com.airbnb.android.react.maps.MapsPackage;
+import com.arttitude360.reactnative.rngoogleplaces.RNGooglePlacesPackage;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.facebook.CallbackManager;
 import com.facebook.react.ReactApplication;
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.zmxv.RNSound.RNSoundPackage;
-import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
-import com.airbnb.android.react.maps.MapsPackage;
-import com.arttitude360.reactnative.rngoogleplaces.RNGooglePlacesPackage;
-import com.ocetnik.timer.BackgroundTimerPackage;
-import com.zmxv.RNSound.RNSoundPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
-import com.airbnb.android.react.maps.MapsPackage;
-import com.arttitude360.reactnative.rngoogleplaces.RNGooglePlacesPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.soloader.SoLoader;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.ocetnik.timer.BackgroundTimerPackage;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import com.zmxv.RNSound.RNSoundPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,6 +36,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNGestureHandlerPackage(),
             new FBSDKPackage(mCallbackManager),
             new VectorIconsPackage(),
             new RNSoundPackage(),
