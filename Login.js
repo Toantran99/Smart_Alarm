@@ -23,6 +23,11 @@ export default class Login extends Component{
           alert('Login was cancelled');
         } else { 
           alert('Login was successful with permissions:'+result.grantedPermissions.toString());
+          const {navigate} = this.props.navigation;
+          navigate('Map',
+          {
+            
+          })
         }
     }catch(error){
       alert('Login failed with error:'+error)
