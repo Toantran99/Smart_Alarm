@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Smart_Alarm</string>
-    <string name="facebook_app_id">271581913532283</string>
+    <string name="facebook_app_id">475784739599313</string>
+    <string name="fb_login_protocol_scheme">fb475784739599313</string>
 </resources>

@@ -1,5 +1,4 @@
 apply plugin: "com.android.application"
-
 import com.android.build.OutputFile
 
 /**
@@ -137,8 +136,9 @@ android {
 }
 
 dependencies {
+//    implementation "com.google.firebase:firebase-core:16.0.6"
+    // If you are receiving Google Play API availability issues, add the following dependency
     implementation project(':react-native-exit-app')
-    implementation project(':react-native-gesture-handler')
     implementation project(':react-native-fbsdk')
     implementation project(':react-native-background-timer')
     implementation 'com.facebook.fresco:fresco:1.8.1'
@@ -156,16 +156,15 @@ dependencies {
     implementation (project(':react-native-google-places')){
         exclude group: 'com.google.android.gms'
     }
-    //compile project(':react-native-facebook-login')
     //implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation ('com.google.android.gms:play-services-base:16.0.1') {force = true;}
     implementation ('com.google.android.gms:play-services-maps:16.0.0') {force = true;}
     implementation ('com.google.android.gms:play-services-gcm:16.0.0') {force = true;}
     implementation ('com.google.android.gms:play-services-places:16.0.0') {force = true;}
-
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:28.0.0"
-    implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation "com.facebook.react:react-native:+"
+//    implementation project(path: ':react-native-firebase')  // From node_modules
 
 }
 

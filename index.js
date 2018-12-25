@@ -1,7 +1,7 @@
 import { AppRegistry } from 'react-native';
-import AppStackNavigator from './AppStackNavigator'
+import App from './SmartAlarmDrawer';
 import { YellowBox } from 'react-native'; 
-import {name as appName} from './app.json';
-
+import LoginScreen from './components/Login/LoginScreen'
+import App1 from './components/Login/App'
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
-AppRegistry.registerComponent(appName, () => AppStackNavigator);
+AppRegistry.registerComponent('Smart_Alarm', () => App1);

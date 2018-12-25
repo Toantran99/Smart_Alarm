@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {View, StyleSheet,TouchableHighlight,Text,Image} from 'react-native';
 import {StackNavigator, DrawerNavigator} from 'react-navigation';
 import Map from './Map';
-import App from './App';
+import App from './SmartAlarmDrawer';
 import Alarm from './Alarm';
 import SetAlarm from './SetAlarm';
 import Icon from 'react-native-vector-icons/Ionicons';
