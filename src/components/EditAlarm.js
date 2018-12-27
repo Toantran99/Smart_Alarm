@@ -17,6 +17,8 @@ import geolib from 'geolib';
 import Icon_MCI from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon_Ion from 'react-native-vector-icons/Ionicons';
 
+const closeIcon = (<Icon_Ion name="md-close" size={32} color={'#fff'} style={{paddingRight: 1, paddingLeft: 15,paddingTop:5 ,paddingBottom:5}}/>);
+
 const updateIcon = (<Icon_Ion name="md-checkmark" size={32} color={'#fff'} style={{paddingRight: 15, paddingLeft: 15,paddingTop:5 ,paddingBottom:5}}/>);
 
 class EditAlarm extends Component {
@@ -43,15 +45,21 @@ class EditAlarm extends Component {
 		}
 	}
 
-	static navigationOptions = ({navigation}) => {
-		const {params = {}} = navigation.state;
-		return {
-		  headerRight:<View >
-				  <TouchableOpacity onPress={() => params.saveAlarm()}>
-					{updateIcon} 
-				</TouchableOpacity>
-				</View>
-		};
+	// static navigationOptions = ({navigation}) => {
+	// 	const {params = {}} = navigation.state;
+	// 	return {
+	// 	  headerRight:<View >
+	// 			  <TouchableOpacity onPress={() => params.saveAlarm()}>
+	// 				{updateIcon} 
+	// 			</TouchableOpacity>
+	// 			</View>
+	// 	};
+	// }
+	static navigationOptions = {
+		title:'Chỉnh sửa báo thức',
+		tabBarVisible:false,
+		header:
+		<View></View>
 	}
 
 	saveAlarm = () => {
@@ -79,18 +87,18 @@ class EditAlarm extends Component {
 		return(
 
 			<View style={{flex: 1, position: "relative"}}>
-				{/* <View style={styles.statusBar}>
+				<View style={styles.statusBar}>
 					<TouchableOpacity onPress = {() => this.props.navigation.goBack()}>
 						{closeIcon}
 					</TouchableOpacity>
 					<Text style = {{paddingLeft: 0,textAlign:'center',alignSelf: 'center', flex: 1, fontSize: 22, color: 'black'}}>Chỉnh sửa báo thức</Text>
 
 					<TouchableOpacity onPress={this.addAlarm} >
-						{saveIcon} 
+						{updateIcon} 
 					</TouchableOpacity>
 				</View> */}
 
-				{/* <View style = {{height: 50}}></View> */}
+				<View style = {{height: 50}}></View>
 				
 				<View style={styles.titleBox}>
 					<Text style = {styles.propertiesTitle}>Tên báo thức</Text>

@@ -10,11 +10,13 @@ import {
 	TouchableOpacity,
 	AsyncStorage,
 	Slider,
-	Picker,ScrollView, Alert,ToastAndroid
+	Picker,ScrollView, Alert,ToastAndroid,TouchableHighlight
 } from 'react-native';
 import Sound from 'react-native-sound';
 import {StackNavigator} from 'react-navigation';
 import Icon_Ion from 'react-native-vector-icons/Ionicons';
+
+const closeIcon = (<Icon_Ion name="md-close" size={32} color={'#fff'} style={{paddingRight: 1, paddingLeft: 15,paddingTop:5 ,paddingBottom:5}}/>);
 
 const saveIcon = (<Icon_Ion name="md-checkmark" size={32} color={'#fff'} style={{paddingRight: 1, paddingLeft: 15,paddingTop:5 ,paddingBottom:5}}/>);
 
@@ -50,22 +52,22 @@ class SetAlarm extends Component {
 			this.loadAllAlarm();
 		}
 
-		static navigationOptions = ({navigation}) => {
-			const {params = {}} = navigation.state;
-			return {
-			  headerRight:<View >
-			  		<TouchableOpacity onPress={() => params.addAlarm()}>
-						{saveIcon} 
-					</TouchableOpacity>
-					</View>
-			};
-		}
-		// static navigationOptions = {
-		// 	title: 'Alarm Settings',
-		// 	tabBarVisible: false,
-		// 	header:
-		// 	<View></View>
-		// };
+		// static navigationOptions = ({navigation}) => {
+		// 	const {params = {}} = navigation.state;
+		// 	return {
+		// 	  headerRight:<View >
+		// 	  		<TouchableHighlight onPress={() => params.addAlarm()}>
+		// 				{saveIcon} 
+		// 			</TouchableHighlight>
+		// 			</View>
+		// 	};
+		// }
+		static navigationOptions = {
+			title: 'Alarm Settings',
+			tabBarVisible: false,
+			header:
+			<View></View>
+		};
 
 
 		addAlarm = () => {
@@ -172,7 +174,7 @@ class SetAlarm extends Component {
 		return(
 
 			<View style={{flex: 1, position: "relative"}}>
-				{/* <View style={styles.statusBar}>
+				<View style={styles.statusBar}>
 					<TouchableOpacity onPress = {() => this.props.navigation.goBack()}>
 						{closeIcon}
 					</TouchableOpacity>
@@ -181,9 +183,9 @@ class SetAlarm extends Component {
 					<TouchableOpacity onPress={this.addAlarm} >
 						{saveIcon} 
 					</TouchableOpacity>
-				</View> */}
+				</View> 
 
-				{/* <View style = {{height: 50}}></View> */}
+				<View style = {{height: 50}}></View>
 				
 				<View style={styles.titleBox}>
 					<Text style = {styles.propertiesTitle}>Tên báo thức</Text>
