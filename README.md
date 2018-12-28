@@ -35,8 +35,9 @@ react-native run-android
 
 ## Màn hình
 
-Cập nhật sớm
-
+![alt text](https://res.cloudinary.com/maung000/image/upload/v1546004778/a.png) ![alt text](https://res.cloudinary.com/maung000/image/upload/v1546004777/b.png)
+![alt text](https://res.cloudinary.com/maung000/image/upload/v1546004786/c.png) ![alt text](https://res.cloudinary.com/maung000/image/upload/v1546004777/d.png)
+![alt text](https://res.cloudinary.com/maung000/image/upload/v1546004777/e.png)![alt text](https://res.cloudinary.com/maung000/image/upload/v1546004779/f.png)
 ## Thành viên
 
 |Student ID  |Full Name               |
